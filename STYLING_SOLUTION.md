@@ -85,7 +85,7 @@ Pre-built components with Petra styling:
 ### Basic Example
 
 ```tsx
-import { Box, Text, brandTokens } from '@petra/ui';
+import { Box, Text, brandTokens } from '@chakra-ui/react';
 
 function MyComponent() {
   return (
@@ -117,7 +117,7 @@ function MyPage() {
 ### Building Custom Components
 
 ```tsx
-import { Box, type BoxProps, brandTokens } from '@petra/ui';
+import { Box, type BoxProps, brandTokens } from '@chakra-ui/react';
 
 export function FeatureCard({ children, ...props }: BoxProps) {
   return (
@@ -236,7 +236,7 @@ petra-platform/
 ## 🚀 Production Checklist
 
 - ✅ All CSS variables defined in `globals.css`
-- ✅ Brand tokens exported from `@petra/ui`
+- ✅ Brand tokens exported from `@chakra-ui/react`
 - ✅ Fonts loaded (Montserrat + Inter)
 - ✅ Components use `brandTokens` instead of hardcoded values
 - ✅ Hover/active states defined
@@ -331,7 +331,7 @@ import './globals.css';  // ← Must be imported
 **Fix:** Rebuild the UI package:
 
 ```bash
-pnpm --filter @petra/ui build
+pnpm --filter @chakra-ui/react build
 ```
 
 ### Fonts not loading?

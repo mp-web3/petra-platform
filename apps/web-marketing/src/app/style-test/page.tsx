@@ -10,7 +10,7 @@ import {
   VStack,
   HStack,
   brandTokens,
-} from '@petra/ui';
+} from '@chakra-ui/react';
 import { BrandButton } from '@/components/BrandButton';
 import MainButton from '@/components/MainButton';
 

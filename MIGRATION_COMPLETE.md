@@ -85,7 +85,7 @@ The entire frontend from `@petra-website/` has been successfully migrated to the
 - ✅ Consistent naming conventions
 
 ### **3. Chakra UI Integration**
-- ✅ All components use `@petra/ui` shared package
+- ✅ All components use `@chakra-ui/react` shared package
 - ✅ Consistent theme tokens (colors, typography, spacing)
 - ✅ Semantic color tokens for better maintenance
 - ✅ Responsive design maintained
@@ -188,7 +188,7 @@ NEXT_PUBLIC_API_URL=http://localhost:3001  # Dev
 ```
 
 ### **Shared Packages Used**
-- `@petra/ui` - Chakra UI components and theme
+- `@chakra-ui/react` - Chakra UI components and theme
 - `@petra/types` - Shared TypeScript types
 - `@petra/utils` - Utility functions (plans, etc.)
 - `@petra/api-client` - API communication

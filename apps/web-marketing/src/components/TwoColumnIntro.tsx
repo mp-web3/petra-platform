@@ -1,4 +1,4 @@
-import { Heading, SimpleGrid, Text, VStack, Container } from '@petra/ui';
+import { Heading, SimpleGrid, Text, VStack, Container } from '@chakra-ui/react';
 import MainButton from './MainButton';
 
 interface TwoColumnIntroProps {

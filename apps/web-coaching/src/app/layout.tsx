@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { PetraUIProvider } from '@petra/ui';
+import { PetraUIProvider } from '@chakra-ui/react';
 import './globals.css';
 
 export const metadata: Metadata = {

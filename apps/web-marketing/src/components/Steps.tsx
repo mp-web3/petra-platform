@@ -1,4 +1,4 @@
-import { Box, HStack, Heading, Text, VStack, SimpleGrid } from '@petra/ui';
+import { Box, HStack, Heading, Text, VStack, SimpleGrid } from '@chakra-ui/react';
 
 interface StepItem {
   number: number;

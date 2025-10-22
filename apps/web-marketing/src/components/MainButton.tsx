@@ -1,5 +1,7 @@
+'use client';
+
 import Link from 'next/link';
-import { Button, brandTokens } from '@petra/ui';
+import { Button } from '@chakra-ui/react';
 
 interface MainButtonProps {
   text?: string;
@@ -12,20 +14,21 @@ export default function MainButton({ text, href, onClick, isExternal }: MainButt
   const buttonEl = (
     <Button
       onClick={onClick}
-      bg={brandTokens.primary}
+      bg="flame.500"
       color="white"
-      fontFamily={brandTokens.fonts.heading}
-      fontWeight="600"
+      fontFamily="button"
+      fontWeight="medium"
+      textStyle="button"
       px={8}
       py={4}
-      borderRadius={brandTokens.radii.button}
+      borderRadius="full"
       _hover={{ 
-        bg: brandTokens.primaryHover,
+        bg: "flame.600",
         transform: 'translateY(-2px)',
         boxShadow: 'lg',
       }}
       _active={{
-        bg: brandTokens.primaryActive,
+        bg: "flame.700",
         transform: 'translateY(0)',
       }}
       transition="all 0.2s"

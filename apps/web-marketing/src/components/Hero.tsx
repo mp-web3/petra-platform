@@ -1,4 +1,6 @@
-import { Box, Container, VStack, Heading, Text } from '@petra/ui';
+'use client';
+
+import { Box, Container, VStack, Heading, Text } from '@chakra-ui/react';
 import MainButton from './MainButton';
 
 interface HeroProps {

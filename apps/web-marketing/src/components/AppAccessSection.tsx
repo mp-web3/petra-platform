@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { Box, Heading, SimpleGrid, VStack } from '@petra/ui';
+import { Box, Heading, SimpleGrid, VStack } from '@chakra-ui/react';
 import Features from './Features';
 
 interface FeatureItem {

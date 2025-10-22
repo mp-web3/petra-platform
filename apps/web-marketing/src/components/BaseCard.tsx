@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Box, Heading, Text, VStack } from '@petra/ui';
+import { Box, Heading, Text, VStack } from '@chakra-ui/react';
 
 interface BaseCardProps {
   heading: string;

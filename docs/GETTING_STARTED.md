@@ -218,7 +218,7 @@ pnpm --filter @petra/api add express
 pnpm add -D -w prettier
 
 # Add to shared package
-pnpm --filter @petra/ui add react-icons
+pnpm --filter @chakra-ui/react add react-icons
 ```
 
 ### Updating Dependencies

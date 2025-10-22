@@ -5,7 +5,7 @@
             "@/*": [
                 "./src/*"
             ],
-            "@petra/ui": [
+            "@chakra-ui/react": [
                 "../../packages/ui/src"
             ],
             "@petra/types": [

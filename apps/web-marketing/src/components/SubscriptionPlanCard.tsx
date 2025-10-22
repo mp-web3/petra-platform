@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Button, HStack, Heading, Text, VStack } from '@petra/ui';
+import { Button, HStack, Heading, Text, VStack } from '@chakra-ui/react';
 import type { PlanFeatures } from '@/lib';
 
 export interface SubscriptionPlanCardProps {

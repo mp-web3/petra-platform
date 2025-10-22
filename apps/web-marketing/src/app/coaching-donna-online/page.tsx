@@ -1,6 +1,6 @@
 'use client';
 
-import { Box } from '@petra/ui';
+import { Box } from '@chakra-ui/react';
 import { useEffect, useRef } from 'react';
 import {
   Hero,

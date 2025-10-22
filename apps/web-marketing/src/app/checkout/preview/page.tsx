@@ -1,7 +1,7 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { Box, Container, Heading, Text, VStack, Button, HStack } from '@petra/ui';
+import { Box, Container, Heading, Text, VStack, Button, HStack } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { getPlanBySlug } from '@/lib/plans';
 import type { UiPlan } from '@/lib/plans';

@@ -12,7 +12,6 @@
   "dependencies": {
     "@petra/api-client": "workspace:*",
     "@petra/types": "workspace:*",
-    "@petra/ui": "workspace:*",
     "@petra/utils": "workspace:*",
     "next": "^16.0.0",
     "react": "^19.2.0",

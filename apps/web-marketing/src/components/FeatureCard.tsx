@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { Heading, Text, VStack } from '@petra/ui';
+import { Heading, Text, VStack } from '@chakra-ui/react';
 
 export interface FeatureCardProps {
   iconSrc: string;

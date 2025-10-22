@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { HStack, Heading, Stack, Text, VStack } from '@petra/ui';
+import { HStack, Heading, Stack, Text, VStack } from '@chakra-ui/react';
 
 interface FeaturesItem {
   featureIconSrc: string;

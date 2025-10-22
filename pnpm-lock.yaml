@@ -129,9 +129,6 @@ importers:
       '@petra/types':
         specifier: workspace:*
         version: link:../../packages/types
-      '@petra/ui':
-        specifier: workspace:*
-        version: link:../../packages/ui
       '@petra/utils':
         specifier: workspace:*
         version: link:../../packages/utils
@@ -169,21 +166,27 @@ importers:
 
   apps/web-marketing:
     dependencies:
+      '@chakra-ui/react':
+        specifier: ^3.26.0
+        version: 3.26.0(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      '@emotion/react':
+        specifier: ^11.14.0
+        version: 11.14.0(@types/react@19.2.2)(react@19.2.0)
       '@petra/api-client':
         specifier: workspace:*
         version: link:../../packages/api-client
       '@petra/types':
         specifier: workspace:*
         version: link:../../packages/types
-      '@petra/ui':
-        specifier: workspace:*
-        version: link:../../packages/ui
       '@petra/utils':
         specifier: workspace:*
         version: link:../../packages/utils
       next:
         specifier: 15.1.6
         version: 15.1.6(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      next-themes:
+        specifier: ^0.4.6
+        version: 0.4.6(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       react:
         specifier: ^19.2.0
         version: 19.2.0
@@ -248,43 +251,6 @@ importers:
       '@petra/config':
         specifier: workspace:*
         version: link:../config
-      typescript:
-        specifier: ^5.8.3
-        version: 5.9.3
-
-  packages/ui:
-    dependencies:
-      '@ark-ui/react':
-        specifier: 5.23.0
-        version: 5.23.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
-      '@chakra-ui/react':
-        specifier: 3.26.0
-        version: 3.26.0(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
-      '@emotion/react':
-        specifier: ^11.14.0
-        version: 11.14.0(@types/react@19.2.2)(react@19.2.0)
-      next-themes:
-        specifier: ^0.4.6
-        version: 0.4.6(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
-      react:
-        specifier: ^19.2.0
-        version: 19.2.0
-      react-dom:
-        specifier: ^19.2.0
-        version: 19.2.0(react@19.2.0)
-      react-icons:
-        specifier: ^5.5.0
-        version: 5.5.0(react@19.2.0)
-    devDependencies:
-      '@petra/config':
-        specifier: workspace:*
-        version: link:../config
-      '@types/react':
-        specifier: ^19.1.10
-        version: 19.2.2
-      '@types/react-dom':
-        specifier: ^19.1.7
-        version: 19.2.2(@types/react@19.2.2)
       typescript:
         specifier: ^5.8.3
         version: 5.9.3

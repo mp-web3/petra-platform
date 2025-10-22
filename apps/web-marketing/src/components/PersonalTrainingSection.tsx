@@ -1,4 +1,4 @@
-import { Box, Heading, SimpleGrid, Text, VStack } from '@petra/ui';
+import { Box, Heading, SimpleGrid, Text, VStack } from '@chakra-ui/react';
 import MainButton from './MainButton';
 import FeatureCard from './FeatureCard';
 import type { FeatureCardProps } from './FeatureCard';

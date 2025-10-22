@@ -17,4 +17,3 @@ export { default as PersonalTrainingSection } from './PersonalTrainingSection';
 export { default as BenefitsSection } from './BenefitsSection';
 export { default as AppAccessSection } from './AppAccessSection';
 export { default as FAQsSection } from './FAQsSection';
-export { BrandButton } from './BrandButton';

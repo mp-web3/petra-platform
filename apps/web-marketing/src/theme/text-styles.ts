@@ -1,5 +1,6 @@
-// Text style semantic tokens
+// src/theme/text-styles.ts
 export const textStyles = {
+
     title: {
         description: 'This is used for the title of the page',
         value: {
@@ -7,85 +8,86 @@ export const textStyles = {
             fontSize: ['5xl', '5xl', '5xl'],
             lineHeight: 'shorter',
             fontWeight: 'normal',
-            textTransform: 'uppercase',
-        },
+            textTransform: 'uppercase'
+        }
     },
 
     h1: {
-        description: 'Main heading',
+        description: '',
         value: {
             fontFamily: '{fonts.h1}',
             fontSize: ['7xl', '7xl', '9xl'],
             lineHeight: 'shorter',
             fontWeight: 'normal',
             textTransform: 'uppercase',
-            letterSpacing: 'normal',
-        },
+            letterSpacing: 'normal'
+        }
     },
 
     h2: {
-        description: 'Secondary heading',
+        description: '',
         value: {
             fontFamily: '{fonts.h2}',
             fontSize: ['6xl', '6xl', '8xl'],
             lineHeight: 'normal',
             fontWeight: 'normal',
-            textTransform: 'uppercase',
-        },
+            textTransform: 'uppercase'
+        }
     },
 
     h3: {
-        description: 'Tertiary heading',
+        description: '',
         value: {
             fontFamily: '{fonts.h3}',
             fontSize: ['5xl', '5xl', '5xl'],
             lineHeight: 'shorter',
             fontWeight: 'normal',
-            textTransform: 'uppercase',
-        },
+            textTransform: 'uppercase'
+        }
     },
 
     h4: {
-        description: 'Quaternary heading',
+        description: '',
         value: {
             fontFamily: '{fonts.h4}',
             fontSize: ['md', 'lg', 'lg'],
             lineHeight: 'shorter',
             fontWeight: 'normal',
-            textTransform: 'uppercase',
-        },
+            textTransform: 'uppercase'
+        }
     },
 
     subHeader: {
-        description: 'Sub header text',
+        description: '',
         value: {
             fontFamily: '{fonts.subHeader}',
             fontSize: ['xl', '2xl', '2xl'],
             lineHeight: 'shorter',
             fontWeight: 'light',
-            textTransform: 'none',
-        },
+            textTransform: 'none'
+        }
+
     },
 
     button: {
-        description: 'Button text',
+        description: '',
         value: {
             fontFamily: '{fonts.button}',
             fontSize: ['md', 'md', 'md'],
             lineHeight: 'shorter',
             fontWeight: 'medium',
             textTransform: 'uppercase',
-        },
+        }
     },
 
     objectionReducing: {
-        description: 'Objection reducing text',
+        description: '',
         value: {
             fontFamily: '{fonts.body}',
             fontSize: ['md', 'md', 'md'],
             lineHeight: 'shorter',
             fontWeight: 'normal',
-        },
-    },
-};
+        }
+    }
 
+}

@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { Box, Heading, Text, VStack, Accordion, HStack } from '@petra/ui';
+import { Box, Heading, Text, VStack, Accordion, HStack } from '@chakra-ui/react';
 import { LuChevronDown } from 'react-icons/lu';
 
 export interface FAQItem {

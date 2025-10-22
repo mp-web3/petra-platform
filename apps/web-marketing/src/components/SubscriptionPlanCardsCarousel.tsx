@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, HStack, IconButton } from '@petra/ui';
+import { Box, HStack, IconButton } from '@chakra-ui/react';
 import { useEffect, useRef, useState } from 'react';
 import { LuChevronLeft, LuChevronRight } from 'react-icons/lu';
 import SubscriptionPlanCard from './SubscriptionPlanCard';
@@ -76,7 +76,7 @@ export default function SubscriptionPlanCardsSlider({
         pb={[2, 4]}
         scrollSnapType={{ base: 'x mandatory', md: 'none' }}
         css={{
-          'scrollbar-width': 'none',
+          scrollbarWidth: 'none',
           '&::-webkit-scrollbar': { display: 'none' },
           scrollPaddingInline: '16px',
           overscrollBehaviorX: 'contain',

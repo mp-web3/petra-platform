@@ -1,4 +1,4 @@
-import { Box, Heading, Text, Button, Container } from '@petra/ui';
+import { Box, Heading, Text, Button, Container } from '@chakra-ui/react';
 import Link from 'next/link';
 
 export default function HomePage() {

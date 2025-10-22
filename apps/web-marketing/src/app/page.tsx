@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, SimpleGrid, Container, Heading, VStack, Text } from '@petra/ui';
+import { Box, SimpleGrid, Container, Heading, VStack, Text } from '@chakra-ui/react';
 import { useRef } from 'react';
 import {
   Hero,

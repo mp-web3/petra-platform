@@ -56,7 +56,7 @@ src/
 ## 🔧 Technology
 
 - **Framework**: Next.js 16 (App Router)
-- **UI**: Chakra UI (@petra/ui)
+- **UI**: Chakra UI (@chakra-ui/react)
 - **API Client**: @petra/api-client
 - **Types**: @petra/types
 - **Styling**: Chakra UI + CSS
@@ -72,7 +72,7 @@ NEXT_PUBLIC_APP_URL=http://localhost:3002
 
 This app uses shared packages from the monorepo:
 
-- `@petra/ui` - Chakra UI theme and components
+- `@chakra-ui/react` - Chakra UI theme and components
 - `@petra/api-client` - Type-safe API client
 - `@petra/types` - Shared TypeScript types
 - `@petra/utils` - Shared utilities

@@ -147,7 +147,7 @@ The structure is ready. Now you need to:
    - etc.
 
 4. **Update Imports**
-   - Change `import { Button } from '@chakra-ui/react'` to `import { Button } from '@petra/ui'`
+   - Change `import { Button } from '@chakra-ui/react'` to `import { Button } from '@chakra-ui/react'`
    - Change React Router `<Link>` to Next.js `<Link>`
 
 ### From `backend-petra-website` → Already Migrated! ✅

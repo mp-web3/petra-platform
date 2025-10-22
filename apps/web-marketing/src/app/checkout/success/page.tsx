@@ -1,4 +1,4 @@
-import { Box, Container, Heading, Text, VStack, Button } from '@petra/ui';
+import { Box, Container, Heading, Text, VStack, Button } from '@chakra-ui/react';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 

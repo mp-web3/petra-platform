@@ -1,4 +1,4 @@
-import { Box, Heading, Text, VStack } from '@petra/ui';
+import { Box, Heading, Text, VStack } from '@chakra-ui/react';
 import type { SubscriptionPlanCardProps } from './SubscriptionPlanCard';
 import SubscriptionPlanCardsSlider from './SubscriptionPlanCardsCarousel';
 

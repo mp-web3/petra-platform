@@ -31,7 +31,7 @@ WORKDIR /app
 # Build shared packages
 RUN pnpm --filter @petra/types build
 RUN pnpm --filter @petra/utils build
-RUN pnpm --filter @petra/ui build
+RUN pnpm --filter @chakra-ui/react build
 RUN pnpm --filter @petra/api-client build
 
 # Build web-marketing

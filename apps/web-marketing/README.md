@@ -60,7 +60,7 @@ src/
 ## 🔧 Technology
 
 - **Framework**: Next.js 16 (App Router)
-- **UI**: Chakra UI (@petra/ui)
+- **UI**: Chakra UI (@chakra-ui/react)
 - **API Client**: @petra/api-client
 - **Types**: @petra/types
 - **Payments**: Stripe Checkout
@@ -79,7 +79,7 @@ This app will replace the Vite-based petra-website. To migrate:
 
 1. Copy components from `petra-website/src/components/` to `src/components/`
 2. Convert React Router routes to Next.js App Router pages
-3. Update imports to use `@petra/ui` package
+3. Update imports to use `@chakra-ui/react` package
 4. Move assets to `public/` directory
 5. Test all pages and functionality
 

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Provider } from '@petra/ui';
+import { Provider } from '@/components/providers';
 import Navigation from '@/components/Navigation';
 import './globals.css';
 
@@ -18,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="it" suppressHydrationWarning>
       <body suppressHydrationWarning>
-        <Provider attribute="class" defaultTheme="light">
+        <Provider>
           <Navigation />
           {children}
         </Provider>

@@ -11,8 +11,8 @@ import {
   VStack,
   Text,
   CloseButton,
-} from '@petra/ui';
-import { useDisclosure } from '@petra/ui';
+  useDisclosure,
+} from '@chakra-ui/react';
 import { LuMenu } from 'react-icons/lu';
 
 export default function Navigation() {

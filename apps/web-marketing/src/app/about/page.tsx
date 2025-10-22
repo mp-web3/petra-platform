@@ -1,4 +1,4 @@
-import { Box, Container, Heading, Text, VStack } from '@petra/ui';
+import { Box, Container, Heading, Text, VStack } from '@chakra-ui/react';
 import { SectionWithImageAndText } from '@/components';
 import type { Metadata } from 'next';
 

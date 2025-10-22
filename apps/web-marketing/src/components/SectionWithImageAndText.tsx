@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { Box, Heading, SimpleGrid, Text, VStack } from '@petra/ui';
+import { Box, Heading, SimpleGrid, Text, VStack } from '@chakra-ui/react';
 
 interface SectionWithImageAndTextProps {
   heading: string;

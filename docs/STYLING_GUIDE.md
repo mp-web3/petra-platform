@@ -34,10 +34,10 @@ All Petra brand colors are defined as CSS variables in `/apps/web-marketing/src/
 
 ### 2. **Brand Tokens (brandTokens)**
 
-For easier access in components, we export `brandTokens` from `@petra/ui`:
+For easier access in components, we export `brandTokens` from `@chakra-ui/react`:
 
 ```typescript
-import { brandTokens } from '@petra/ui';
+import { brandTokens } from '@chakra-ui/react';
 
 // Usage in components:
 <Box bg={brandTokens.primary}>
@@ -59,7 +59,7 @@ Use these components for common patterns:
 ### Basic Component Styling
 
 ```tsx
-import { Box, Text, Button, brandTokens } from '@petra/ui';
+import { Box, Text, Button, brandTokens } from '@chakra-ui/react';
 
 function MyComponent() {
   return (
@@ -118,7 +118,7 @@ function MyComponent() {
 ### Using Accent Colors
 
 ```tsx
-import { Box, Heading, brandTokens } from '@petra/ui';
+import { Box, Heading, brandTokens } from '@chakra-ui/react';
 
 function FeatureCard() {
   return (
@@ -224,7 +224,7 @@ When creating reusable components, follow this pattern:
 
 ```tsx
 // components/BrandCard.tsx
-import { Box, type BoxProps, brandTokens } from '@petra/ui';
+import { Box, type BoxProps, brandTokens } from '@chakra-ui/react';
 
 export function BrandCard({ children, ...props }: BoxProps) {
   return (
@@ -296,7 +296,7 @@ import './globals.css';
 Rebuild the UI package:
 
 ```bash
-pnpm --filter @petra/ui build
+pnpm --filter @chakra-ui/react build
 ```
 
 ### Still looks wrong?
