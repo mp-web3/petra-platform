@@ -5,19 +5,20 @@ import { typography } from './typography';
 import { textStyles } from './text-styles';
 
 const config = defineConfig({
-    theme: {
-        tokens: {
-            colors,
-            ...typography,
-        },
-        semanticTokens: {
-            ...semanticTokens,
-        },
-        textStyles,
+  theme: {
+    tokens: {
+      colors,
+      ...typography,
     },
+    semanticTokens: {
+      ...semanticTokens,
+    },
+    textStyles,
+  },
 });
 
-export const petraTheme = createSystem(defaultConfig, config);
+export const system = createSystem(defaultConfig, config);
 
+// Export individual tokens for reference
 export { colors, semanticTokens, typography, textStyles };
 

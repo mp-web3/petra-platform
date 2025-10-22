@@ -1,10 +1,13 @@
 import type { Metadata } from 'next';
-import { PetraUIProvider } from '@petra/ui';
+import { Provider } from '@petra/ui';
+import Navigation from '@/components/Navigation';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Petra Online Coaching',
-  description: 'Transform your fitness journey with personalized online coaching',
+  title: 'Petra Online Coaching | Coaching Personalizzato',
+  description:
+    'Trasforma il tuo corpo con coaching online personalizzato. Programmi di allenamento su misura per donne e uomini.',
+  keywords: ['coaching online', 'personal training', 'fitness', 'allenamento personalizzato'],
 };
 
 export default function RootLayout({
@@ -13,11 +16,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body>
-        <PetraUIProvider>{children}</PetraUIProvider>
+    <html lang="it" suppressHydrationWarning>
+      <body suppressHydrationWarning>
+        <Provider attribute="class" defaultTheme="light">
+          <Navigation />
+          {children}
+        </Provider>
       </body>
     </html>
   );
 }
-
