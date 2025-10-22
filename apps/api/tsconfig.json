@@ -1,0 +1,17 @@
+{
+    "extends": "@petra/config/typescript/nest.json",
+    "compilerOptions": {
+        "baseUrl": "./",
+        "paths": {
+            "@petra/types": [
+                "../../packages/types/src"
+            ],
+            "@petra/utils": [
+                "../../packages/utils/src"
+            ]
+        }
+    },
+    "include": [
+        "src/**/*"
+    ]
+}

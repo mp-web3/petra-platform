@@ -1,0 +1,114 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: petra-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: petra
+      POSTGRES_PASSWORD: petra_dev_password
+      POSTGRES_DB: petra_platform
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U petra']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis (for future use: caching, sessions, queues)
+  redis:
+    image: redis:7-alpine
+    container_name: petra-redis
+    restart: unless-stopped
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # NestJS API
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+      target: development
+    container_name: petra-api
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+      DATABASE_URL: postgresql://petra:petra_dev_password@postgres:5432/petra_platform?schema=public
+      FRONTEND_URL: http://localhost:3000
+    ports:
+      - '3001:3001'
+    volumes:
+      - ./apps/api:/app/apps/api
+      - ./packages:/app/packages
+      - /app/node_modules
+      - /app/apps/api/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: sh -c "pnpm prisma:generate && pnpm prisma:migrate && pnpm dev"
+
+  # Next.js Marketing Website
+  web-marketing:
+    build:
+      context: .
+      dockerfile: apps/web-marketing/Dockerfile
+      target: development
+    container_name: petra-web-marketing
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      NEXT_PUBLIC_API_URL: http://localhost:3001
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./apps/web-marketing:/app/apps/web-marketing
+      - ./packages:/app/packages
+      - /app/node_modules
+      - /app/apps/web-marketing/node_modules
+      - /app/apps/web-marketing/.next
+    depends_on:
+      - api
+    command: pnpm dev
+
+  # Next.js Coaching Platform
+  web-coaching:
+    build:
+      context: .
+      dockerfile: apps/web-coaching/Dockerfile
+      target: development
+    container_name: petra-web-coaching
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      NEXT_PUBLIC_API_URL: http://localhost:3001
+    ports:
+      - '3002:3002'
+    volumes:
+      - ./apps/web-coaching:/app/apps/web-coaching
+      - ./packages:/app/packages
+      - /app/node_modules
+      - /app/apps/web-coaching/node_modules
+      - /app/apps/web-coaching/.next
+    depends_on:
+      - api
+    command: pnpm dev --port 3002
+
+volumes:
+  postgres_data:
+  redis_data:
+

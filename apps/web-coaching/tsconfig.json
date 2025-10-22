@@ -1,0 +1,31 @@
+{
+    "extends": "@petra/config/typescript/nextjs.json",
+    "compilerOptions": {
+        "paths": {
+            "@/*": [
+                "./src/*"
+            ],
+            "@petra/ui": [
+                "../../packages/ui/src"
+            ],
+            "@petra/types": [
+                "../../packages/types/src"
+            ],
+            "@petra/utils": [
+                "../../packages/utils/src"
+            ],
+            "@petra/api-client": [
+                "../../packages/api-client/src"
+            ]
+        }
+    },
+    "include": [
+        "next-env.d.ts",
+        "**/*.ts",
+        "**/*.tsx",
+        ".next/types/**/*.ts"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}

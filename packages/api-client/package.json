@@ -1,0 +1,23 @@
+{
+  "name": "@petra/api-client",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@petra/types": "workspace:*",
+    "axios": "^1.7.9"
+  },
+  "devDependencies": {
+    "@petra/config": "workspace:*",
+    "@types/node": "^24.5.2",
+    "typescript": "^5.8.3"
+  }
+}
+

@@ -1,0 +1,117 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+    CLIENT
+    COACH
+    ADMIN
+}
+
+enum SubscriptionStatus {
+    ACTIVE
+    CANCELLED
+    PAST_DUE
+    TRIALING
+    INCOMPLETE
+}
+
+enum SubscriptionPlanType {
+    WOMAN_STARTER
+    WOMAN_PREMIUM
+    MAN_STARTER
+    MAN_PREMIUM
+}
+
+enum PlanDuration {
+    WEEKS_6  @map("6W")
+    WEEKS_18 @map("18W")
+    WEEKS_36 @map("36W")
+}
+
+enum OrderStatus {
+    PENDING
+    COMPLETED
+    FAILED
+    REFUNDED
+}
+
+model User {
+    id               String         @id @default(cuid())
+    email            String         @unique
+    name             String?
+    role             UserRole       @default(CLIENT)
+    stripeCustomerId String?        @unique @map("stripe_customer_id")
+    orders           Order[]
+    subscriptions    Subscription[]
+    createdAt        DateTime       @default(now()) @map("created_at")
+    updatedAt        DateTime       @updatedAt @map("updated_at")
+
+    @@map("users")
+}
+
+model Order {
+    id                    String      @id @default(cuid())
+    user                  User?       @relation(fields: [userId], references: [id])
+    userId                String?     @map("user_id")
+    planId                String      @map("plan_id")
+    amount                Int
+    currency              String
+    status                OrderStatus
+    stripeSessionId       String      @unique @map("stripe_session_id")
+    stripePaymentIntentId String?     @unique @map("stripe_payment_intent_id")
+    consent               Consent?
+    createdAt             DateTime    @default(now()) @map("created_at")
+    updatedAt             DateTime    @updatedAt @map("updated_at")
+
+    @@map("orders")
+}
+
+model Consent {
+    id                String   @id @default(cuid())
+    order             Order    @relation(fields: [orderId], references: [id])
+    orderId           String   @unique @map("order_id")
+    tosAccepted       Boolean  @map("tos_accepted")
+    marketingOptIn    Boolean? @map("marketing_opt_in")
+    disclosureVersion String   @map("disclosure_version")
+    ipAddress         String?  @map("ip_address")
+    userAgent         String?  @map("user_agent")
+    createdAt         DateTime @default(now()) @map("created_at")
+
+    @@map("consents")
+}
+
+model Subscription {
+    id                   String               @id @default(cuid())
+    user                 User                 @relation(fields: [userId], references: [id])
+    userId               String               @map("user_id")
+    planType             SubscriptionPlanType @map("plan_type")
+    duration             PlanDuration
+    status               SubscriptionStatus
+    stripeSubscriptionId String               @unique @map("stripe_subscription_id")
+    currentPeriodStart   DateTime             @map("current_period_start")
+    currentPeriodEnd     DateTime             @map("current_period_end")
+    cancelAtPeriodEnd    Boolean              @default(false) @map("cancel_at_period_end")
+    createdAt            DateTime             @default(now()) @map("created_at")
+    updatedAt            DateTime             @updatedAt @map("updated_at")
+
+    @@map("subscriptions")
+}
+
+model PlanCatalog {
+    id            String               @id
+    title         String
+    subtitle      String
+    priceLabel    String               @map("price_label")
+    stripePriceId String               @map("stripe_price_id")
+    planType      SubscriptionPlanType @map("plan_type")
+    duration      PlanDuration
+    active        Boolean              @default(true)
+
+    @@map("plan_catalog")
+}
