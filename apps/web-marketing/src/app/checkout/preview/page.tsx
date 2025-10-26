@@ -2,13 +2,13 @@
 
 import { useSearchParams } from 'next/navigation';
 import { Box, Container, Heading, Text, VStack, Button, HStack } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { getPlanBySlug } from '@/lib/plans';
 import type { UiPlan } from '@/lib/plans';
 import { createApiClient } from '@petra/api-client';
 import Link from 'next/link';
 
-export default function PreviewOrderPage() {
+function PreviewOrderContent() {
   const searchParams = useSearchParams();
   const planSlug = searchParams.get('plan');
   const [plan, setPlan] = useState<UiPlan | null>(null);
@@ -221,6 +221,20 @@ export default function PreviewOrderPage() {
         </VStack>
       </Container>
     </Box>
+  );
+}
+
+export default function PreviewOrderPage() {
+  return (
+    <Suspense fallback={
+      <Box pt={20} minH="100vh" bg="surface.page">
+        <Container maxW="container.md" px={[4, 6, 8]} py={[16, 20, 24]}>
+          <Text textAlign="center">Caricamento...</Text>
+        </Container>
+      </Box>
+    }>
+      <PreviewOrderContent />
+    </Suspense>
   );
 }
 

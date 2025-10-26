@@ -14,24 +14,13 @@ export default function MainButton({ text, href, onClick, isExternal }: MainButt
   const buttonEl = (
     <Button
       onClick={onClick}
-      bg="flame.500"
-      color="white"
-      fontFamily="button"
-      fontWeight="medium"
+      bg="surface.action"
+      color="text.onSurfaceAction"
       textStyle="button"
       px={8}
       py={4}
-      borderRadius="full"
-      _hover={{ 
-        bg: "flame.600",
-        transform: 'translateY(-2px)',
-        boxShadow: 'lg',
-      }}
-      _active={{
-        bg: "flame.700",
-        transform: 'translateY(0)',
-      }}
-      transition="all 0.2s"
+      borderRadius="md"
+      _hover={{ bg: 'interactive.primaryHover' }}
       w={{ base: 'auto', md: 'auto' }}
     >
       {text}
