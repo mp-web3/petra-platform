@@ -17,3 +17,5 @@ export { default as PersonalTrainingSection } from './PersonalTrainingSection';
 export { default as BenefitsSection } from './BenefitsSection';
 export { default as AppAccessSection } from './AppAccessSection';
 export { default as FAQsSection } from './FAQsSection';
+export { default as SingleAccordion } from './Accordion/SingleAccordion';
+export { default as TripleAccordion } from './Accordion/TripleAccordion';

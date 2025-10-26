@@ -1,6 +1,6 @@
 'use client';
 
-import { Text } from '@chakra-ui/react';
+import { Link, Text } from '@chakra-ui/react';
 import React from 'react';
 
 interface ReadMoreProps {
@@ -34,18 +34,15 @@ export default function ReadMore({
       {head}
       {!expanded && '... '}
       {expanded && tail}
-      <button
+      <Link
+        as="button"
+        color="primary.default"
         onClick={() => setExpanded((v) => !v)}
-        style={{
-          marginLeft: '0.5rem',
-          color: 'var(--chakra-colors-primary-default)',
-          cursor: 'pointer',
-          background: 'none',
-          border: 'none',
-        }}
+        ml={2}
+        _hover={{ color: 'interactive.primaryHover' }}
       >
         {expanded ? lessLabel : moreLabel}
-      </button>
+      </Link>
     </Text>
   );
 }

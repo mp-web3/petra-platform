@@ -4,7 +4,7 @@ import { Box, Heading, Text, VStack } from '@chakra-ui/react';
 interface BaseCardProps {
   heading: string;
   description: string;
-  href: string;
+  link: string;
   backgroundColor: string;
   headingColor: string;
   descriptionColor: string;
@@ -13,13 +13,13 @@ interface BaseCardProps {
 export default function BaseCard({
   heading,
   description,
-  href,
+  link,
   backgroundColor,
   headingColor,
   descriptionColor,
 }: BaseCardProps) {
   return (
-    <Link href={href}>
+    <Link href={link}>
       <Box
         display="flex"
         aspectRatio={1 / 1}
