@@ -84,7 +84,7 @@ function PreviewOrderContent() {
   if (!planSlug) {
     return (
       <Box pt={20} minH="100vh" bg="surface.page">
-        <Container maxW="container.md" px={[4, 6, 8]} py={[16, 20, 24]}>
+        <Container maxW="container.md" px={[4, 6, 8]} pb={[16, 20, 24]}>
           <VStack gap={6} textAlign="center">
             <Heading as="h1" textStyle="h2" color="heading.onPage">
               Nessun Piano Selezionato
@@ -104,7 +104,7 @@ function PreviewOrderContent() {
   if (error && !plan) {
     return (
       <Box pt={20} minH="100vh" bg="surface.page">
-        <Container maxW="container.md" px={[4, 6, 8]} py={[16, 20, 24]}>
+        <Container maxW="container.md" px={[4, 6, 8]} pb={[16, 20, 24]}>
           <VStack gap={6} textAlign="center">
             <Heading as="h1" textStyle="h2" color="heading.onPage">
               Piano Non Trovato
@@ -122,7 +122,7 @@ function PreviewOrderContent() {
   if (!plan) {
     return (
       <Box pt={20} minH="100vh" bg="surface.page">
-        <Container maxW="container.md" px={[4, 6, 8]} py={[16, 20, 24]}>
+        <Container maxW="container.md" px={[4, 6, 8]} pb={[16, 20, 24]}>
           <Text textAlign="center">Caricamento...</Text>
         </Container>
       </Box>
@@ -131,9 +131,9 @@ function PreviewOrderContent() {
 
   return (
     <Box pt={20} minH="100vh" bg="surface.page">
-      <Container maxW="container.md" px={[4, 6, 8]} py={[16, 20, 24]}>
+      <Container maxW="container.md" px={[4, 6, 8]} pb={[16, 20, 24]} >
         <VStack align="flex-start" gap={8}>
-          <Heading as="h1" textStyle="h2" color="heading.onPage">
+          <Heading as="h1" textStyle="h2">
             Riepilogo Ordine
           </Heading>
 
@@ -143,17 +143,12 @@ function PreviewOrderContent() {
             p={6}
             borderRadius="lg"
             border="1px solid"
-            borderColor="border.subtle"
+            borderColor="border.subtle" 
           >
             <VStack align="flex-start" gap={4}>
               <Heading as="h2" size="xl" color="heading.onPage">
                 {plan.title}
               </Heading>
-              {plan.subtitle && (
-                <Text fontSize="lg" color="text.muted">
-                  {plan.subtitle}
-                </Text>
-              )}
 
               <Box pt={4} borderTop="1px solid" borderColor="border.subtle" w="full">
                 <HStack justify="space-between" w="full">
@@ -171,11 +166,13 @@ function PreviewOrderContent() {
                   Include:
                 </Text>
                 <VStack as="ul" align="flex-start" gap={2} pl={4} listStyleType="disc">
-                  {plan.features.map((feature) => (
-                    <Text as="li" key={feature.id} fontSize="sm" color="text.onPage">
-                      {feature.label}
-                    </Text>
-                  ))}
+                  {plan.features
+                    .filter((feature) => feature.checked ?? true)
+                    .map((feature) => (
+                      <Text as="li" key={feature.id} fontSize="sm" color="text.onPage">
+                        {feature.label}
+                      </Text>
+                    ))}
                 </VStack>
               </Box>
             </VStack>
@@ -317,7 +314,7 @@ export default function PreviewOrderPage() {
   return (
     <Suspense fallback={
       <Box pt={20} minH="100vh" bg="surface.page">
-        <Container maxW="container.md" px={[4, 6, 8]} py={[16, 20, 24]}>
+        <Container maxW="container.md" px={[4, 6, 8]} pb={[16, 20, 24]}>
           <Text textAlign="center">Caricamento...</Text>
         </Container>
       </Box>
