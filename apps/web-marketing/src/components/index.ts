@@ -13,6 +13,8 @@ export { default as SubscriptionPlanSection } from './SubscriptionPlanSection';
 export { default as TwoColumnIntro } from './TwoColumnIntro';
 export { default as ReadMore } from './ReadMore';
 export { default as SectionWithImageAndText } from './SectionWithImageAndText';
+export { default as Markdown } from './Markdown';
+export { default as TermsOfServiceDialog } from './TermsOfServiceDialog';
 export { default as PersonalTrainingSection } from './PersonalTrainingSection';
 export { default as BenefitsSection } from './BenefitsSection';
 export { default as AppAccessSection } from './AppAccessSection';

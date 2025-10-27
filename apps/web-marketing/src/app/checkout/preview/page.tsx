@@ -7,6 +7,7 @@ import { getPlanBySlug } from '@/lib/plans';
 import type { UiPlan } from '@/lib/plans';
 import { createApiClient } from '@petra/api-client';
 import Link from 'next/link';
+import { TermsOfServiceDialog } from '@/components';
 
 function PreviewOrderContent() {
   const searchParams = useSearchParams();
@@ -14,6 +15,8 @@ function PreviewOrderContent() {
   const [plan, setPlan] = useState<UiPlan | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [acceptedTos, setAcceptedTos] = useState(false);
+  const [termsVersion, setTermsVersion] = useState<string | null>(null);
 
   useEffect(() => {
     if (planSlug) {
@@ -40,8 +43,8 @@ function PreviewOrderContent() {
       const result = await apiClient.checkout.createCheckoutSession({
         planId: plan.slug,
         email: '', // Will be filled in Stripe checkout
-        acceptedTos: true,
-        disclosureVersion: 'v1.0',
+        acceptedTos,
+        disclosureVersion: termsVersion || 'v1.0',
         marketingOptIn: false,
       });
 
@@ -176,24 +179,36 @@ function PreviewOrderContent() {
             border="1px solid"
             borderColor="border.subtle"
           >
-            <VStack align="flex-start" gap={2}>
+            <VStack align="flex-start" gap={3}>
               <Text fontSize="sm" fontWeight="semibold" color="text.onPage">
                 📋 Nota Importante
               </Text>
               <Text fontSize="sm" color="text.onPage">
-                Procedendo con l'acquisto, accetti i nostri{' '}
-                <Link href="/terms" style={{ textDecoration: 'underline' }}>
-                  Termini e Condizioni
-                </Link>{' '}
-                e la{' '}
+                Prima di procedere al pagamento, devi leggere e accettare i termini di
+                servizio.
+              </Text>
+              <TermsOfServiceDialog
+                checked={acceptedTos}
+                onChange={(next, version) => {
+                  setAcceptedTos(next);
+                  if (next) setTermsVersion(version);
+                }}
+                onAccept={(version) => {
+                  setAcceptedTos(true);
+                  setTermsVersion(version);
+                }}
+              />
+              <Text fontSize="sm" color="text.muted">
+                Consulta anche la nostra{' '}
                 <Link href="/privacy-policy" style={{ textDecoration: 'underline' }}>
                   Privacy Policy
                 </Link>
                 .
               </Text>
               <Text fontSize="sm" color="text.onPage">
-                Il pagamento è sicuro e gestito da Stripe. Dopo il pagamento, riceverai
-                immediatamente accesso alla piattaforma e alle tue prime istruzioni via email.
+                Il pagamento è sicuro e gestito da Stripe. Dopo il pagamento, riceverai una
+                mail con le istruzioni per i next steps e il link per prenotare la prima
+                coaching call.
               </Text>
             </VStack>
           </Box>
@@ -205,6 +220,7 @@ function PreviewOrderContent() {
             <Button
               onClick={handleCheckout}
               loading={loading}
+              disabled={!acceptedTos || loading}
               bg="surface.action"
               color="text.onSurfaceAction"
               _hover={{ bg: 'interactive.primaryHover' }}
@@ -215,8 +231,7 @@ function PreviewOrderContent() {
           </HStack>
 
           <Text fontSize="xs" color="text.muted" textAlign="center" w="full">
-            🔒 Pagamento sicuro tramite Stripe • Garanzia soddisfatti o rimborsati entro 14
-            giorni
+            🔒 Pagamento sicuro tramite Stripe
           </Text>
         </VStack>
       </Container>
