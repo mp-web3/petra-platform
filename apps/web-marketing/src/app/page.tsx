@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, SimpleGrid, Container, Heading, VStack, Text, Image } from '@chakra-ui/react';
+import { Box, SimpleGrid, Container, Heading, VStack, Text, Image as ChakraImage } from '@chakra-ui/react';
 import { useRef } from 'react';
 import {
   Hero,
@@ -151,10 +151,10 @@ Per me, l'obiettivo è costruire insieme un cambiamento duraturo, porsi nuove sf
               </Text>
             </VStack>
 
-            <Image
+            <ChakraImage
               src="/images/fitness-coach-barbell-row-vertical.webp"
               alt="Fitness strength performance"
-              style={{ aspectRatio: '1/1' }}
+              aspectRatio="1/1"
             />
           </SimpleGrid>
         </Container>
@@ -236,39 +236,104 @@ Per me, l'obiettivo è costruire insieme un cambiamento duraturo, porsi nuove sf
       <Testimonials items={testimonials} />
 
       {/* Chi Sono */}
-      <SectionWithImageAndText
-        heading="Chi sono"
-        imageUrl="/images/petra-primo-piano.webp"
-        imageAlt="Petra - Personal Trainer"
-        text="Sono Petra, personal trainer certificata con anni di esperienza nell'aiutare persone come te a raggiungere i loro obiettivi di fitness. Il mio approccio unisce scienza, passione e dedizione per creare programmi che funzionano davvero."
-      />
+      <Box minH="100vh" position="relative">
+        {/* Background Image */}
+        <Box
+          position="absolute"
+          top={0}
+          left={0}
+          right={0}
+          bottom={0}
+          backgroundImage="url(/images/vintage-medicine-balls-background.webp)"
+          backgroundSize="cover"
+          backgroundPosition="center"
+          backgroundRepeat="no-repeat"
+          zIndex={1}
+        />
 
-      {/* App Access */}
-      <AppAccessSection
-        heading="accesso all'app"
-        features={[
-          {
-            featureIconSrc: '/icons/videocam_primary.svg',
-            featureIconAlt: 'Video',
-            featureTitle: 'Video Esercizi',
-            featureText: 'Tutorial completi per ogni esercizio',
-          },
-          {
-            featureIconSrc: '/icons/edit_note_primary.svg',
-            featureIconAlt: 'Notes',
-            featureTitle: 'Piano Personalizzato',
-            featureText: 'Il tuo programma sempre a portata di mano',
-          },
-          {
-            featureIconSrc: '/icons/format_list_numbered_primary.svg',
-            featureIconAlt: 'Progress',
-            featureTitle: 'Traccia Progressi',
-            featureText: 'Monitora i tuoi risultati giorno per giorno',
-          },
-        ]}
-        mockupImageSrc="/images/coachplus-app-mockup.jpg"
-        mockupImageAlt="CoachPlus App"
-      />
+        {/* Dark Overlay */}
+        <Box
+          position="absolute"
+          top={0}
+          left={0}
+          right={0}
+          bottom={0}
+          bg="hoverlay.default"
+          zIndex={2}
+        />
+
+        {/* Content */}
+        <Container
+          position="relative"
+          zIndex={3}
+          maxW="container.xl"
+          px={[4, 6, 8]}
+          py={[16, 20, 24]}
+          gap={[4, 4, 8]}
+          h="100vh"
+          display="flex"
+          alignItems="center"
+          flexDirection="column"
+        >
+          <Heading as="h4" textStyle="h4" color="heading.onDark" textAlign="center">
+            incontra la tua coach
+          </Heading>
+
+          <SimpleGrid
+            columns={{ base: 1, md: 2 }}
+            gap={[11, 6, 8]}
+            mx="auto"
+            alignItems="stretch"
+            justifyItems={['center', 'flex-start']}
+            w="100%"
+          >
+            <VStack align={['center', 'flex-start']} justifySelf="left" gap={[4, 4, 8]}>
+              <Heading
+                as="h2"
+                textStyle="h2"
+                color="primary.default"
+                whiteSpace="pre-line"
+                lineHeight={1}
+                textAlign={['center', 'left']}
+              >
+                {`petra
+scaringelli`}
+              </Heading>
+              {/* Mobile-only image under heading */}
+              <ChakraImage
+                src="/images/petra-primo-piano.webp"
+                aspectRatio="1/1"
+                alt="Coach P - Petra Scaringelli"
+                objectPosition="center"
+                objectFit="cover"
+                maxW={['60%', '100%']}
+                display={['block', 'none']}
+              />
+              <Text
+                textStyle="md"
+                color="text.onDefaultHoverlay"
+                textAlign={['center', 'left']}
+                whiteSpace="pre-line"
+              >
+                {`Mi chiamo Petra e il mio primo amore… aveva i guantoni.
+
+Il pugilato agonistico mi ha introdotta al mondo dello sport, insegnandomi disciplina, forza mentale e il coraggio di superare i miei limiti. Dopo questa esperienza, ho continuato il mio percorso in palestra, tra body-building, allenamento funzionale e powerlifting.
+
+Oggi sono una personal trainer e coach online, e propongo percorsi personalizzati con un approccio basato sull'ascolto, la fiducia e il rapporto autentico tra coach e atleta. Perché, per me, l'allenamento è molto più di serie e ripetizioni: è un modo per sentirsi forti, presenti e… nel posto giusto.`}
+              </Text>
+            </VStack>
+            <ChakraImage
+              src="/images/petra-primo-piano.webp"
+              aspectRatio="1/1"
+              alt="Coach P - Petra Scaringelli"
+              objectPosition="center"
+              objectFit="cover"
+              maxW={['50%', '100%']}
+              display={['none', 'block']}
+            />
+          </SimpleGrid>
+        </Container>
+      </Box>
 
       {/* FAQs */}
       <FAQsSection
