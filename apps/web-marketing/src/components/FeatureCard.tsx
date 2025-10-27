@@ -1,5 +1,4 @@
-import Image from 'next/image';
-import { Heading, Text, VStack } from '@chakra-ui/react';
+import { Heading, Image, Text, VStack } from '@chakra-ui/react';
 
 export interface FeatureCardProps {
   iconSrc: string;
@@ -42,7 +41,7 @@ export default function FeatureCard({
       border={hasCardBorder ? '1px solid' : undefined}
       borderColor={hasCardBorder ? 'border.subtle' : undefined}
     >
-      <Image src={iconSrc} alt={iconAlt} width={56} height={56} />
+      <Image src={iconSrc} alt={iconAlt} boxSize={[12, 14]} />
       <Heading as="h3" textStyle="h4">
         {title}
       </Heading>

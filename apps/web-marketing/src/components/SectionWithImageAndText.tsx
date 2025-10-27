@@ -1,5 +1,4 @@
-import Image from 'next/image';
-import { Box, Heading, SimpleGrid, Text, VStack } from '@chakra-ui/react';
+import { Box, Heading, Image, SimpleGrid, Text, VStack } from '@chakra-ui/react';
 
 interface SectionWithImageAndTextProps {
   heading: string;
@@ -38,15 +37,12 @@ export default function SectionWithImageAndText({
             {text}
           </Text>
         </VStack>
-        <Box position="relative" w="full" maxW={{ md: `${width}px` }}>
-          <Image
-            src={imageUrl}
-            alt={imageAlt || heading}
-            width={width}
-            height={height}
-            style={{ width: '100%', height: 'auto' }}
-          />
-        </Box>
+        <Image
+          src={imageUrl}
+          aspectRatio="1/1"
+          maxW={{ md: `${width}px` }}
+          alt={imageAlt || heading}
+        />
       </SimpleGrid>
     </Box>
   );

@@ -1,5 +1,4 @@
-import Image from 'next/image';
-import { HStack, Heading, Stack, Text, VStack } from '@chakra-ui/react';
+import { HStack, Heading, Image, Stack, Text, VStack } from '@chakra-ui/react';
 
 interface FeaturesItem {
   featureIconSrc: string;
@@ -31,9 +30,9 @@ function FeatureRow({
       <Image
         src={featureIconSrc}
         alt={featureIconAlt}
-        width={20}
-        height={20}
-        style={{ flexShrink: 0 }}
+        boxSize={5}
+        objectFit="contain"
+        flexShrink={0}
       />
 
       <VStack align="flex-start" gap={3} flex={1}>

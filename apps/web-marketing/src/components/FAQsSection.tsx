@@ -1,5 +1,4 @@
-import Image from 'next/image';
-import { Box, Heading, Text, VStack, Accordion, HStack } from '@chakra-ui/react';
+import { Box, Heading, Image, Text, VStack, Accordion, HStack } from '@chakra-ui/react';
 import { LuChevronDown } from 'react-icons/lu';
 
 export interface FAQItem {
@@ -23,20 +22,15 @@ export default function FAQsSection({
   return (
     <Box bg="surface.page" color="text.onPage" px={[4, 6, 8]} py={[16, 20, 24]}>
       <VStack gap={6} maxW="container.xl" mx="auto" textAlign="center">
-        <Box
+        <Image
+          src="/icons/question_mark_primary.svg"
+          alt="question mark icon"
+          boxSize={[12, 14]}
           border="2px solid"
           borderColor="border.focus"
           borderRadius="full"
           bg="primary.light"
-          p={3}
-        >
-          <Image
-            src="/icons/question_mark_primary.svg"
-            alt="question mark icon"
-            width={56}
-            height={56}
-          />
-        </Box>
+        />
         <Heading as="h2" textStyle="h2">
           {heading} <Text as="span" color="primary.default">{highlight}</Text>
         </Heading>

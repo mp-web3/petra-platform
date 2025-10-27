@@ -1,6 +1,5 @@
 import Link from 'next/link';
-import Image from 'next/image';
-import { Button, HStack, Heading, Text, VStack } from '@chakra-ui/react';
+import { Button, HStack, Heading, Image, Text, VStack } from '@chakra-ui/react';
 import type { PlanFeatures } from '@/lib';
 
 export interface SubscriptionPlanCardProps {
@@ -74,9 +73,8 @@ export default function SubscriptionPlanCard({
             <Image
               src={(f.checked ?? true) ? '/icons/done_primary.svg' : '/icons/close_primary.svg'}
               alt=""
-              width={20}
-              height={20}
-              style={{ marginTop: '2px' }}
+              boxSize={5}
+              mt={0.5}
             />
             <Text textStyle="md" color={highlighted ? 'text.onDark' : 'text.onLight'}>
               {f.label}

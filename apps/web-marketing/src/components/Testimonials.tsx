@@ -1,7 +1,6 @@
 'use client';
 
-import Image from 'next/image';
-import { Box, Container, SimpleGrid, VStack, HStack, Text, Button } from '@chakra-ui/react';
+import { Box, Container, SimpleGrid, VStack, HStack, Text, Button, Image } from '@chakra-ui/react';
 import { useBreakpointValue } from '@chakra-ui/react';
 import { useMemo, useState } from 'react';
 
@@ -58,13 +57,11 @@ export default function Testimonials({ items }: TestimonialsProps) {
                   <Image
                     src={t.avatarUrl}
                     alt={t.author || 'testimonial avatar'}
-                    width={300}
-                    height={300}
-                    style={{
-                      borderRadius: '50%',
-                      objectFit: 'cover',
-                      border: '2px solid black',
-                    }}
+                    boxSize={{ base: '200px', md: '300px' }}
+                    borderRadius="full"
+                    objectFit="fit"
+                    border="2px solid"
+                    borderColor="black"
                   />
                 ) : null}
 
