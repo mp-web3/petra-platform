@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, SimpleGrid, Container, Heading, VStack, Text } from '@chakra-ui/react';
+import { Box, SimpleGrid, Container, Heading, VStack, Text, Image } from '@chakra-ui/react';
 import { useRef } from 'react';
 import {
   Hero,
@@ -92,7 +92,7 @@ export default function HomePage() {
           left={0}
           right={0}
           bottom={0}
-          backgroundImage="url(/images/weights-background.jpg)"
+          backgroundImage="url(/images/fitness-coach-barbell-row.webp)"
           backgroundSize="cover"
           backgroundPosition="center"
           backgroundRepeat="no-repeat"
@@ -117,47 +117,91 @@ export default function HomePage() {
           maxW="container.xl"
           px={[4, 6, 8]}
           py={[16, 20, 24]}
+          h="auto"
+          display="flex"
+          alignItems="center"
         >
-          <VStack align="flex-start" gap={[6, 8, 10]} maxW="2xl">
-            <Heading as="h2" textStyle="h2" color="text.onDefaultHoverlay">
-              il metodo
-            </Heading>
-            <Text color="text.onDefaultHoverlay" fontSize="lg">
-              Credo che un coaching efficace nasca da un legame autentico tra coach e atleta. Non si tratta solo di allenamenti e risultati, ma di fiducia, comunicazione e condivisione.
-              Il coaching non è solo una scheda da seguire, ma un percorso personalizzato che tiene conto delle tue esigenze, dei tuoi ritmi e delle tue aspirazioni.
-              Per me, l'obiettivo è costruire insieme un cambiamento duraturo, porsi nuove sfide, impegnarsi con passione e, soprattutto, divertirsi lungo il percorso.
-            </Text>
-          </VStack>
+          <SimpleGrid
+            columns={{ base: 1, md: 2 }}
+            gap={[11, 6, 8]}
+            mx="auto"
+            alignItems="stretch"
+            justifyItems="flex-start"
+            w="100%"
+          >
+            <VStack align="flex-start" gap={[4, 4, 8]}>
+              <Heading
+                as="h2"
+                textStyle="h2"
+                color="text.onDefaultHoverlay"
+                whiteSpace="pre-line"
+                lineHeight={1}
+              >
+                il metodo
+              </Heading>
+              <Text
+                textStyle="md"
+                color="text.onDefaultHoverlay"
+                textAlign="left"
+                whiteSpace="pre-line"
+              >
+                {`Credo che un coaching efficace nasca da un legame autentico tra coach e atleta. Non si tratta solo di allenamenti e risultati, ma di fiducia, comunicazione e condivisione.
+Il coaching non è solo una scheda da seguire, ma un percorso personalizzato che tiene conto delle tue esigenze, dei tuoi ritmi e delle tue aspirazioni.
+Per me, l'obiettivo è costruire insieme un cambiamento duraturo, porsi nuove sfide, impegnarsi con passione e, soprattutto, divertirsi lungo il percorso.`}
+              </Text>
+            </VStack>
+
+            <Image
+              src="/images/fitness-coach-barbell-row-vertical.webp"
+              alt="Fitness strength performance"
+              style={{ aspectRatio: '1/1' }}
+            />
+          </SimpleGrid>
         </Container>
       </Box>
 
       {/* Personal Training */}
       <PersonalTrainingSection
-        heading="Personal Training"
-        highlight="in palestra"
-        subheading="Allenamenti personalizzati per massimizzare i tuoi risultati"
+        heading="PERSONAL TRAINING"
+        highlight="1:1 IN PRESENZA"
+        subheading="Vuoi portare il tuo allenamento al livello successivo?"
         features={[
           {
-            iconSrc: '/icons/videocam_primary.svg',
-            iconAlt: 'Video',
-            title: 'Sessioni Individuali',
-            description: 'Allenamenti one-to-one completamente personalizzati',
+            iconSrc: '/icons/video_library_primary.svg',
+            iconAlt: 'Attenzione personalizzata',
+            title: 'Attenzione Personalizzata',
+            description:
+              'Allenamenti one‑to‑one dove ogni sessione è studiata esclusivamente per te e i tuoi obiettivi specifici.',
+            variant: 'light',
+            align: 'center',
+            rounded: 'lg',
+            hasCardBorder: true,
           },
           {
-            iconSrc: '/icons/video_library_primary.svg',
-            iconAlt: 'Video Library',
-            title: 'Programmi Strutturati',
-            description: 'Piani di allenamento progressivi e bilanciati',
+            iconSrc: '/icons/videocam_primary.svg',
+            iconAlt: 'Correzione immediata',
+            title: 'Correzione Immediata',
+            description:
+              'Feedback istantaneo sulla tecnica e progressioni in tempo reale per massimizzare ogni movimento.',
+            variant: 'light',
+            align: 'center',
+            rounded: 'lg',
+            hasCardBorder: true,
           },
           {
             iconSrc: '/icons/star_border_primary.svg',
-            iconAlt: 'Star',
+            iconAlt: 'Risultati garantiti',
             title: 'Risultati Garantiti',
-            description: 'Monitoraggio costante dei tuoi progressi',
+            description:
+              "L'intensità e la personalizzazione del training 1:1 ti assicurano progressi rapidi e duraturi.",
+            variant: 'light',
+            align: 'center',
+            rounded: 'lg',
+            hasCardBorder: true,
           },
         ]}
-        ctaText="Scopri di più"
-        ctaHref="/about"
+        ctaText="vai al form"
+        ctaHref=""
       />
 
       {/* Benefits */}
