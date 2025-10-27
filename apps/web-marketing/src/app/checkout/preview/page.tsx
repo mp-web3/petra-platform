@@ -20,6 +20,7 @@ function PreviewOrderContent() {
   const [email, setEmail] = useState('');
   const [marketingOptIn, setMarketingOptIn] = useState(false);
   const [emailError, setEmailError] = useState<string | null>(null);
+  const [showTosHelp, setShowTosHelp] = useState(false);
 
   useEffect(() => {
     if (planSlug) {
@@ -143,7 +144,7 @@ function PreviewOrderContent() {
             p={6}
             borderRadius="lg"
             border="1px solid"
-            borderColor="border.subtle" 
+            borderColor="border.subtle"
           >
             <VStack align="flex-start" gap={4}>
               <Heading as="h2" size="xl" color="heading.onPage">
@@ -212,11 +213,15 @@ function PreviewOrderContent() {
                 checked={acceptedTos}
                 onChange={(next, version) => {
                   setAcceptedTos(next);
-                  if (next) setTermsVersion(version);
+                  if (next) {
+                    setTermsVersion(version);
+                    setShowTosHelp(false);
+                  }
                 }}
                 onAccept={(version) => {
                   setAcceptedTos(true);
                   setTermsVersion(version);
+                  setShowTosHelp(false);
                 }}
               />
 
@@ -226,19 +231,27 @@ function PreviewOrderContent() {
                     checked={acceptedTos}
                     onCheckedChange={(e) => {
                       const next = e.checked === true;
-                      // Allow unchecking, but do not allow checking here
-                      if (!next) setAcceptedTos(false);
+                      if (next) {
+                        // User tried to check without using dialog
+                        setShowTosHelp(true);
+                      } else {
+                        // Allow unchecking
+                        setAcceptedTos(false);
+                        setShowTosHelp(false);
+                      }
                     }}
-                    aria-describedby="tos-help"
+                    aria-describedby={showTosHelp ? "tos-help" : undefined}
                   >
                     <Checkbox.Control />
                     <Checkbox.Label>Accetto i Termini</Checkbox.Label>
                     <Checkbox.HiddenInput />
                   </Checkbox.Root>
-                  <Text id="tos-help" color="text.muted" fontSize="sm">
-                    Per attivare questo consenso, clicca "Apri i termini di servizio" e
-                    accetta nel riquadro dedicato.
-                  </Text>
+                  {showTosHelp && (
+                    <Text id="tos-help" color="text.muted" fontSize="sm">
+                      Per attivare questo consenso, clicca "Apri i termini di servizio" e
+                      accetta nel riquadro dedicato.
+                    </Text>
+                  )}
                 </Field.Root>
 
                 <Checkbox.Root
