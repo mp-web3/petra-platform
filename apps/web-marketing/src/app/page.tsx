@@ -337,27 +337,47 @@ Oggi sono una personal trainer e coach online, e propongo percorsi personalizzat
 
       {/* FAQs */}
       <FAQsSection
-        heading="Domande"
-        highlight="Frequenti"
-        items={[
-          {
-            q: 'Come funziona il coaching online?',
-            a: 'Dopo l\'acquisto, riceverai accesso alla piattaforma dove troverai il tuo piano di allenamento personalizzato, video tutorial e supporto diretto con me via WhatsApp.',
-          },
-          {
-            q: 'Serve attrezzatura specifica?',
-            a: 'Dipende dal tuo obiettivo. Posso creare programmi per casa con attrezzatura minima o per palestra. Lo discuteremo nella prima consulenza.',
-          },
-          {
-            q: 'Quanto tempo serve per vedere risultati?',
-            a: 'Con costanza e impegno, i primi risultati sono visibili già dopo 4-6 settimane. Ogni percorso è diverso e dipende dal punto di partenza e dagli obiettivi.',
-          },
-          {
-            q: 'Posso cambiare piano durante il percorso?',
-            a: 'Certamente! Il tuo piano può essere adattato in base ai progressi e alle tue esigenze.',
-          },
-        ]}
-      />
+                heading="DOMANDE"
+                highlight="FREQUENTI"
+                subheading="Trova risposta ai tuoi dubbi sul coaching online personalizzato"
+                items={[
+                    {
+                        q: 'Cosa succede dopo l\'acquisto del percorso?',
+                        a: `Dopo l’acquisto riceverai una mail con tutte le istruzioni per prenotare la consulenza iniziale, che si svolgerà in videochiamata su Google Meet.
+                          Dopo la consulenza riceverai le indicazioni per scaricare l’app e registrarti come mio/a atleta.
+                          Entro 5 giorni lavorativi dalla consulenza, riceverai via email la conferma di inizio percorso e troverai il tuo programma personalizzato caricato sull’app (con data di inizio fissata al lunedì della settimana successiva).`
+                    },
+                    { q: 'Come posso effettuare il pagamento?', a: 'Puoi pagare con carta di credito/debito, PayPal, bonifico istantaneo o altri metodi disponibili nella pagina di checkout.' },
+                    { q: 'Come posso rinnovare il percorso?', a: `Il lunedì dell’ultima 5ª settimana riceverai una mail di follow-up per rinnovare con anticipo il percorso.
+                          In questo modo potrai prenotare subito la consulenza di monitoraggio ed evitare interruzioni tra un programma di allenamento e l’altro.
+                          Sono previsti sconti per rinnovo o upgrade (consulta la pagina dedicata).` },
+                    // Consulenza iniziale & Programma
+                    { q: 'Come prenoto la consulenza iniziale?', a: 'Dopo l’acquisto riceverai via mail gli slot disponibili: potrai scegliere in autonomia giorno e orario tra quelli proposti. La consulenza si svolgerà online tramite Google Meet.' },
+                    { q: 'In cosa consiste la consulenza iniziale?', a: 'È una videochiamata (di massimo 60 minuti) in cui analizzeremo insieme il tuo livello attuale, eventuali esperienze passate, lo stile di vita, la motivazione e gli obiettivi. Questo mi permette di costruire un percorso completamente personalizzato su di te.' },
+                    { q: 'Quando riceverò il programma personalizzato?', a: 'Il programma verrà caricato sull’app entro 5 giorni lavorativi dalla consulenza. La data di inizio percorso è sempre fissata al lunedì della settimana successiva alla consegna.' },
+                    { q: 'Come riceverò il programma personalizzato?', a: 'Lo troverai direttamente sull’app, insieme a tutte le note per iniziare.' },
+                    // App e allenamento
+                    { q: 'Dove posso scaricare l\'app?', a: 'L\'app è disponibile per dispositivi iOS e Android. Riceverai il link per il download e le istruzioni per completare la registrazione come mio/a atleta dopo la consulenza iniziale.' },
+                    { q: 'Il programma di allenamento è personalizzato?', a: 'Sì, ogni programma è creato su misura in base a obiettivi, livello di partenza, disponibilità settimanale e stile di vita.' },
+                    { q: 'Il percorso è adatto anche ai principianti?', a: 'Assolutamente sì! È pensato anche per chi parte da zero. Per chi ha poca esperienza è consigliato il percorso Premium con supporto costante e correzione video. È anche possibile affiancare sessioni di personal training 1:1 in presenza.' },
+                    { q: 'Ci sono video dimostrativi degli esercizi sull\'app?', a: 'Sì, ogni esercizio è accompagnato da un video tutorial chiaro e dettagliato, più eventuali note per l’esecuzione corretta.' },
+                    { q: 'Quanti allenamenti a settimana sono previsti?', a: 'La frequenza è definita in base ai tuoi obiettivi e al tempo a disposizione. La decidiamo insieme durante la consulenza iniziale.' },
+                    { q: 'Quanto dura un programma di allenamento personalizzato?', a: 'Dipende dal percorso scelto: 6 settimane (~1,5 mesi), 18 settimane (~4,5 mesi), 36 settimane (~9 mesi).' },
+                    // Supporto & Presenzialità
+                    { q: 'Posso contattarti se ho dubbi durante il percorso?', a: `Sì, in base alle modalità del percorso scelto.\nPercorso Starter: comunicazione via email solo per urgenze.\nPercorso Premium: supporto via email + WhatsApp, con invio video per correzione tecnica e assistenza continua.` },
+                    { q: 'Vorrei fare delle lezioni in presenza: è possibile?', a: 'Sì, possiamo organizzare lezioni di personal training 1:1 dal vivo in base alla tua zona e alla mia disponibilità.' },
+                    { q: 'Ti ho scritto su Instagram ma non ho ricevuto risposta. Perché?', a: 'Instagram non è un canale ufficiale di assistenza. Per il coaching online rispondo solo tramite i canali previsti dal percorso (email e/o WhatsApp a seconda del piano).' },
+                    // Pagamenti, sconti e codici
+                    { q: 'Quali sono gli sconti attivabili?', a: 'Durante l’anno posso attivare promozioni stagionali o sconti per chi rinnova. Tieni d’occhio la pagina offerte o iscriviti alla newsletter.' },
+                    { q: 'Come funzionano i codici sconto?', a: 'Inserisci il codice al checkout: lo sconto viene applicato automaticamente.' },
+                    // Varie
+                    { q: 'È possibile sospendere momentaneamente il percorso?', a: 'Possibile solo per percorsi da 18 o 36 settimane e per motivi di salute certificati. La durata di sospensione viene concordata in base alle necessità.' },
+                    { q: 'Come richiedo la sospensione del percorso?', a: 'Invia una richiesta via email allegando il certificato medico. Valuterò il caso e ti risponderò con i dettagli.' },
+                    { q: 'Cosa succede se vado in vacanza durante il percorso?', a: 'Il coaching è flessibile: possiamo inserire settimane di scarico o allenamenti alternativi. Non è prevista la sospensione per motivi personali o vacanze.' },
+                    { q: 'Riceverò una ricevuta o una fattura?', a: 'Sì, riceverai regolare ricevuta/fattura via email all’acquisto.' },
+                    { q: 'Hai altre domande?', a: 'Scrivimi via email: sarò felice di aiutarti!' },
+                ]}
+            />
     </Box>
   );
 }
