@@ -1,5 +1,4 @@
-import Image from 'next/image';
-import { Box, Heading, SimpleGrid, VStack } from '@chakra-ui/react';
+import { Box, Heading, Image, SimpleGrid, VStack } from '@chakra-ui/react';
 import Features from './Features';
 
 interface FeatureItem {
@@ -41,15 +40,11 @@ export default function AppAccessSection({
           <Features heading={undefined} items={features} />
         </VStack>
         {mockupImageSrc && (
-          <Box position="relative" w="full">
-            <Image
-              src={mockupImageSrc}
-              alt={mockupImageAlt}
-              width={600}
-              height={600}
-              style={{ width: '100%', height: 'auto', aspectRatio: '1/1' }}
-            />
-          </Box>
+          <Image
+            src={mockupImageSrc}
+            aspectRatio="1/1"
+            alt={mockupImageAlt}
+          />
         )}
       </SimpleGrid>
     </Box>
