@@ -24,7 +24,7 @@ export default function Navigation() {
         <HStack justify="space-between" align="center">
           <Link href="/">
             <Image
-              src="/logos/logo-2.png"
+              src="/logos/logo-petra-coach-white.svg"
               alt="Petra Logo"
               width={50}
               height={50}
