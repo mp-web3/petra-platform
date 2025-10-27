@@ -10,6 +10,7 @@ import {
   BenefitsSection,
   AppAccessSection,
   FAQsSection,
+  TripleAccordion,
 } from '@/components';
 import { plansWomanPremium, toPreviewHref } from '@/lib/plans';
 
@@ -31,7 +32,7 @@ export default function CoachingDonnaPage() {
   return (
     <Box>
       <Hero
-        backgroundImage="/images/donna-coaching-online-trx.jpg"
+        backgroundImage="/images/coaching-online-woman-training-park.webp"
         titleLine1="coaching donna"
         titleLine2="online"
         buttonText="inizia ora"
@@ -41,9 +42,33 @@ export default function CoachingDonnaPage() {
 
       <SectionWithImageAndText
         heading="il mio programma fa per te?"
-        imageUrl="/images/giovane-donna-cliente-tipo-coaching-online.jpg"
+        imageUrl="/images/coach-squat-close-up.webp"
         imageAlt="Giovane donna coaching online"
         text={`Sogni di iniziare ad allenarti ma non sai come muovere i primi passi? Ti senti persa quando varchi la soglia della palestra? Ti alleni da tempo senza vedere i risultati che desideri? Cerchi un programma specificamente pensato per il corpo e le esigenze femminili? Vuoi spingerti oltre i tuoi limiti e scoprire di cosa sei davvero capace? Vuoi rimetterti in forma e sentirti bene con te stessa? Se ti riconosci in almeno una di queste domande, sei nel posto giusto. Il mio coaching è nato proprio per rispondere a questi bisogni, per offrirti la guida e il supporto che hai sempre cercato.`}
+        width={485}
+        height={323}
+      />
+
+      {/* Accordion */}
+      <TripleAccordion
+        items={[
+          {
+            title: 'valorizzazione forme femminili',
+            text: `Percorso mirato a valorizzare le forme femminili, puntando a un rimodellamento armonico del corpo, con focus specifico su glutei, schiena e addome per creare quella "V-shape" tanto desiderata. 
+                                Un approccio "su misura" che combina sviluppo muscolare mirato e tonificazione total body per esaltare la naturale bellezza del corpo femminile.`,
+          },
+          {
+            title: 'sviluppo forza',
+            text: `persorso mirato allo sviluppo della forza: siamo donne, siamo forti! Un cammino per le donne coraggiose, pronte a fidarsi del proprio corpo e scoprire tutte le sue potenzialità. 
+                                Un percorso che sfida i "limiti" autoimposti e rivela la vera forza che è in ogni donna.`,
+          },
+          {
+            title: 'fitness',
+            text: `percorso dedicato a ritrovare la forma fisica e benessere generale. 
+                                Un programma completo per chi si sente "fuori forma" e vuole riconquistare tonicità, energia e consapevolezza del proprio corpo.`,
+          },
+        ]}
+
       />
 
       <Steps
@@ -80,6 +105,38 @@ export default function CoachingDonnaPage() {
             ],
           },
         ]}
+      />
+
+      <AppAccessSection
+        heading="accesso all'app"
+        features={[
+          {
+            featureIconSrc: '/icons/video_library_primary.svg',
+            featureIconAlt: 'Video tutorial',
+            featureTitle: 'Video Tutorial Dettagliati',
+            featureText: 'Sequenze di esercizi dettagliate con serie, ripetizioni, tempi di recupero e note tecniche di esecuzione',
+          },
+          {
+            featureIconSrc: '/icons/calendar_month_primary.svg',
+            featureIconAlt: 'Calendario',
+            featureTitle: 'Piani di Allenamento Personalizzati',
+            featureText: 'Accesso a piani di allenamento di sei settimane completamente personalizzati per i tuoi obiettivi',
+          },
+          {
+            featureIconSrc: '/icons/edit_note_primary.svg',
+            featureIconAlt: 'Feedback',
+            featureTitle: 'Feedback Post-Allenamento',
+            featureText: 'Possibilità di fornire feedback dopo ogni allenamento per monitorare progressi e adattamenti',
+          },
+          {
+            featureIconSrc: '/icons/format_list_numbered_primary.svg',
+            featureIconAlt: 'Video istruttivi',
+            featureTitle: 'Video Istruttivi',
+            featureText: 'Video esplicativi per ogni esercizio con dimostrazioni tecniche complete',
+          },
+        ]}
+        mockupImageSrc="/images/coachplus-iphone-mockup.png"
+        mockupImageAlt="iphone displaying open app coach plus"
       />
 
       <Box ref={subscriptionPlanSectionRef} id="piani">

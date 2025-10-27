@@ -6,6 +6,8 @@ interface SectionWithImageAndTextProps {
   imageUrl: string;
   imageAlt?: string;
   text: string;
+  width?: number;
+  height?: number;
 }
 
 export default function SectionWithImageAndText({
@@ -13,6 +15,8 @@ export default function SectionWithImageAndText({
   imageUrl,
   imageAlt = '',
   text,
+  width = 650,
+  height = 650,
 }: SectionWithImageAndTextProps) {
   return (
     <Box>
@@ -34,13 +38,13 @@ export default function SectionWithImageAndText({
             {text}
           </Text>
         </VStack>
-        <Box position="relative" w="full" maxW={{ md: '650px' }}>
+        <Box position="relative" w="full" maxW={{ md: `${width}px` }}>
           <Image
             src={imageUrl}
             alt={imageAlt || heading}
-            width={650}
-            height={650}
-            style={{ width: '100%', height: 'auto', aspectRatio: '1/1' }}
+            width={width}
+            height={height}
+            style={{ width: '100%', height: 'auto' }}
           />
         </Box>
       </SimpleGrid>
