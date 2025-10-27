@@ -1,7 +1,7 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { Box, Container, Heading, Text, VStack, Button, HStack } from '@chakra-ui/react';
+import { Box, Container, Heading, Text, VStack, Button, HStack, Checkbox, Field, Input, Stack } from '@chakra-ui/react';
 import { useEffect, useState, Suspense } from 'react';
 import { getPlanBySlug } from '@/lib/plans';
 import type { UiPlan } from '@/lib/plans';
@@ -17,6 +17,9 @@ function PreviewOrderContent() {
   const [error, setError] = useState<string | null>(null);
   const [acceptedTos, setAcceptedTos] = useState(false);
   const [termsVersion, setTermsVersion] = useState<string | null>(null);
+  const [email, setEmail] = useState('');
+  const [marketingOptIn, setMarketingOptIn] = useState(false);
+  const [emailError, setEmailError] = useState<string | null>(null);
 
   useEffect(() => {
     if (planSlug) {
@@ -29,11 +32,31 @@ function PreviewOrderContent() {
     }
   }, [planSlug]);
 
+  const validateEmail = (email: string) => {
+    if (!email) return 'Email richiesta';
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) return 'Email non valida';
+    return null;
+  };
+
   const handleCheckout = async () => {
     if (!plan) return;
 
+    // Validate email
+    const emailValidationError = validateEmail(email);
+    if (emailValidationError) {
+      setEmailError(emailValidationError);
+      return;
+    }
+
+    if (!acceptedTos) {
+      setError('Devi accettare i termini di servizio per procedere');
+      return;
+    }
+
     setLoading(true);
     setError(null);
+    setEmailError(null);
 
     try {
       const apiClient = createApiClient(
@@ -42,10 +65,10 @@ function PreviewOrderContent() {
 
       const result = await apiClient.checkout.createCheckoutSession({
         planId: plan.slug,
-        email: '', // Will be filled in Stripe checkout
+        email,
         acceptedTos,
         disclosureVersion: termsVersion || 'v1.0',
-        marketingOptIn: false,
+        marketingOptIn,
       });
 
       if (result.url) {
@@ -174,19 +197,20 @@ function PreviewOrderContent() {
           <Box
             w="full"
             bg="neutralLight.light"
-            p={4}
+            p={6}
             borderRadius="md"
             border="1px solid"
             borderColor="border.subtle"
           >
-            <VStack align="flex-start" gap={3}>
+            <VStack align="flex-start" gap={4}>
               <Text fontSize="sm" fontWeight="semibold" color="text.onPage">
-                📋 Nota Importante
+                📋 Consensi e Conferma
               </Text>
               <Text fontSize="sm" color="text.onPage">
                 Prima di procedere al pagamento, devi leggere e accettare i termini di
                 servizio.
               </Text>
+
               <TermsOfServiceDialog
                 checked={acceptedTos}
                 onChange={(next, version) => {
@@ -198,6 +222,56 @@ function PreviewOrderContent() {
                   setTermsVersion(version);
                 }}
               />
+
+              <Stack w="full" gap={4}>
+                <Field.Root required>
+                  <Checkbox.Root
+                    checked={acceptedTos}
+                    onCheckedChange={(e) => {
+                      const next = e.checked === true;
+                      // Allow unchecking, but do not allow checking here
+                      if (!next) setAcceptedTos(false);
+                    }}
+                    aria-describedby="tos-help"
+                  >
+                    <Checkbox.Control />
+                    <Checkbox.Label>Accetto i Termini</Checkbox.Label>
+                    <Checkbox.HiddenInput />
+                  </Checkbox.Root>
+                  <Text id="tos-help" color="text.muted" fontSize="sm">
+                    Per attivare questo consenso, clicca "Apri i termini di servizio" e
+                    accetta nel riquadro dedicato.
+                  </Text>
+                </Field.Root>
+
+                <Checkbox.Root
+                  checked={marketingOptIn}
+                  onCheckedChange={(e) => setMarketingOptIn(e.checked === true)}
+                  disabled={loading}
+                >
+                  <Checkbox.Control />
+                  <Checkbox.Label>Marketing (opzionale)</Checkbox.Label>
+                  <Checkbox.HiddenInput />
+                </Checkbox.Root>
+
+                <Field.Root required invalid={!!emailError}>
+                  <Field.Label>Email</Field.Label>
+                  <Input
+                    placeholder="petra@gmail.com"
+                    type="email"
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      if (emailError) setEmailError(null);
+                    }}
+                    aria-invalid={!!emailError}
+                    autoComplete="email"
+                    disabled={loading}
+                  />
+                  {emailError && <Field.ErrorText>{emailError}</Field.ErrorText>}
+                </Field.Root>
+              </Stack>
+
               <Text fontSize="sm" color="text.muted">
                 Consulta anche la nostra{' '}
                 <Link href="/privacy-policy" style={{ textDecoration: 'underline' }}>
@@ -220,7 +294,7 @@ function PreviewOrderContent() {
             <Button
               onClick={handleCheckout}
               loading={loading}
-              disabled={!acceptedTos || loading}
+              disabled={!acceptedTos || !email || loading}
               bg="surface.action"
               color="text.onSurfaceAction"
               _hover={{ bg: 'interactive.primaryHover' }}
