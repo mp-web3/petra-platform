@@ -50,7 +50,7 @@ export default function HomePage() {
   return (
     <Box>
       <Hero
-        backgroundImage="/images/hero-background-home.png"
+        backgroundImage="/images/fitness-coach-online-deadlift.webp"
         titleLine1="coaching online"
         titleLine2="personalizzato"
         buttonText="scopri di più"
@@ -99,6 +99,7 @@ export default function HomePage() {
           zIndex={1}
         />
 
+        {/* Dark Overlay */}
         <Box
           position="absolute"
           top={0}
@@ -109,6 +110,7 @@ export default function HomePage() {
           zIndex={2}
         />
 
+        {/* Content */}
         <Container
           position="relative"
           zIndex={3}
@@ -121,8 +123,9 @@ export default function HomePage() {
               il metodo
             </Heading>
             <Text color="text.onDefaultHoverlay" fontSize="lg">
-              Un approccio scientifico e personalizzato per raggiungere i tuoi obiettivi. Ogni
-              programma è creato su misura per le tue esigenze specifiche.
+              Credo che un coaching efficace nasca da un legame autentico tra coach e atleta. Non si tratta solo di allenamenti e risultati, ma di fiducia, comunicazione e condivisione.
+              Il coaching non è solo una scheda da seguire, ma un percorso personalizzato che tiene conto delle tue esigenze, dei tuoi ritmi e delle tue aspirazioni.
+              Per me, l'obiettivo è costruire insieme un cambiamento duraturo, porsi nuove sfide, impegnarsi con passione e, soprattutto, divertirsi lungo il percorso.
             </Text>
           </VStack>
         </Container>

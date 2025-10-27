@@ -26,9 +26,10 @@ export default function Navigation() {
             <Image
               src="/logos/logo-2.png"
               alt="Petra Logo"
-              width={150}
+              width={50}
               height={50}
               priority
+              style={{ height: 'auto' }}
             />
           </Link>
           <IconButton
