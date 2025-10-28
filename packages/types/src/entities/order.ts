@@ -18,7 +18,7 @@ export interface Consent {
     orderId: string;
     tosAccepted: boolean;
     marketingOptIn?: boolean;
-    disclosureVersion: string;
+    disclosureTosVersion: string;
     ipAddress?: string;
     userAgent?: string;
     createdAt: Date;

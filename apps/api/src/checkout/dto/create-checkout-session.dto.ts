@@ -11,12 +11,19 @@ export class CreateCheckoutSessionDto {
     @IsBoolean()
     acceptedTos: boolean;
 
+    @IsString()
+    @MinLength(1)
+    disclosureTosVersion: string;
+
     @IsBoolean()
-    @IsOptional()
-    marketingOptIn?: boolean;
+    acceptedPrivacy: boolean;
 
     @IsString()
     @MinLength(1)
-    disclosureVersion: string;
+    disclosurePrivacyVersion: string;
+
+    @IsBoolean()
+    @IsOptional()
+    marketingOptIn?: boolean;
 }
 

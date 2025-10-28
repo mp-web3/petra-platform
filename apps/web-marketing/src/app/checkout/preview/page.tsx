@@ -17,6 +17,7 @@ function PreviewOrderContent() {
   const [error, setError] = useState<string | null>(null);
   const [acceptedTos, setAcceptedTos] = useState(false);
   const [termsVersion, setTermsVersion] = useState<string | null>(null);
+  const [privacyVersion, setPrivacyVersion] = useState<string | null>(null)
   const [email, setEmail] = useState('');
   const [marketingOptIn, setMarketingOptIn] = useState(false);
   const [emailError, setEmailError] = useState<string | null>(null);
@@ -60,6 +61,13 @@ function PreviewOrderContent() {
     setEmailError(null);
 
     try {
+      let currentPrivacyVersion = privacyVersion;
+      if (!currentPrivacyVersion) {
+        const { CURRENT_PRIVACY_VERSION } = await import('@/lib/legal');
+        currentPrivacyVersion = CURRENT_PRIVACY_VERSION
+        setPrivacyVersion(currentPrivacyVersion)
+      }
+
       const apiClient = createApiClient(
         process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
       );
@@ -68,7 +76,9 @@ function PreviewOrderContent() {
         planId: plan.slug,
         email,
         acceptedTos,
-        disclosureVersion: termsVersion || 'v1.0',
+        disclosureTosVersion: termsVersion || 'v1.0',
+        acceptedPrivacy: true,
+        disclosurePrivacyVersion: privacyVersion || 'v1.0',
         marketingOptIn,
       });
 

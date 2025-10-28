@@ -73,15 +73,17 @@ model Order {
 }
 
 model Consent {
-    id                String   @id @default(cuid())
-    order             Order    @relation(fields: [orderId], references: [id])
-    orderId           String   @unique @map("order_id")
-    tosAccepted       Boolean  @map("tos_accepted")
-    marketingOptIn    Boolean? @map("marketing_opt_in")
-    disclosureVersion String   @map("disclosure_version")
-    ipAddress         String?  @map("ip_address")
-    userAgent         String?  @map("user_agent")
-    createdAt         DateTime @default(now()) @map("created_at")
+    id                       String   @id @default(cuid())
+    order                    Order    @relation(fields: [orderId], references: [id])
+    orderId                  String   @unique @map("order_id")
+    tosAccepted              Boolean  @map("tos_accepted")
+    privacyAccepted          Boolean  @default(true) @map("privacy_accepted")
+    marketingOptIn           Boolean? @map("marketing_opt_in")
+    disclosureTosVersion     String   @map("disclosure_tos_version")
+    disclosurePrivacyVersion String   @default("v1.0") @map("disclosure_privacy_version")
+    ipAddress                String?  @map("ip_address")
+    userAgent                String?  @map("user_agent")
+    createdAt                DateTime @default(now()) @map("created_at")
 
     @@map("consents")
 }

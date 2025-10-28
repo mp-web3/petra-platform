@@ -100,7 +100,7 @@ Body: {
   email: string
   acceptedTos: boolean
   marketingOptIn?: boolean
-  disclosureVersion: string
+  disclosureTosVersion: string
 }
 ```
 

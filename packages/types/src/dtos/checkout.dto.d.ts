@@ -3,7 +3,7 @@ export interface CreateCheckoutSessionDto {
     email: string;
     acceptedTos: boolean;
     marketingOptIn?: boolean;
-    disclosureVersion: string;
+    disclosureTosVersion: string;
 }
 export interface CheckoutSessionResponse {
     url: string;

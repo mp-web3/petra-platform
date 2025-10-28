@@ -2,8 +2,10 @@ export interface CreateCheckoutSessionDto {
     planId: string;
     email: string;
     acceptedTos: boolean;
+    acceptedPrivacy: boolean;
     marketingOptIn?: boolean;
-    disclosureVersion: string;
+    disclosureTosVersion: string;
+    disclosurePrivacyVersion: string;
 }
 
 export interface CheckoutSessionResponse {

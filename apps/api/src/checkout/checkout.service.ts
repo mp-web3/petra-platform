@@ -11,7 +11,15 @@ export class CheckoutService {
     ) { }
 
     async createCheckoutSession(dto: CreateCheckoutSessionDto, idempotencyKey?: string) {
-        const { planId, email, marketingOptIn, disclosureVersion } = dto;
+        const { 
+            planId, 
+            email,
+            acceptedTos,
+            disclosureTosVersion,
+            acceptedPrivacy,
+            disclosurePrivacyVersion, 
+            marketingOptIn, 
+         } = dto;
 
         // Get Stripe price ID from plan slug
         const priceId = this.plansService.getPriceIdByPlanSlug(planId);
@@ -28,8 +36,12 @@ export class CheckoutService {
             email,
             {
                 planId,
+                tosAccepted: String(acceptedTos),
+                tosVersion: disclosureTosVersion,
+                privacyAccepted: String(acceptedPrivacy),
+                privacyVersion: disclosurePrivacyVersion,
                 marketingOptIn: marketingOptIn ? 'true' : 'false',
-                disclosureVersion,
+                
             },
             idempotencyKey
         );
