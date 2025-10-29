@@ -2,12 +2,14 @@ import { Controller, Post, Req, Res, HttpStatus } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { StripeService } from './stripe.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { EmailService } from 'src/email/email.service';
 
 @Controller('api/stripe')
 export class StripeController {
     constructor(
         private readonly stripeService: StripeService,
-        private readonly prisma: PrismaService
+        private readonly prisma: PrismaService,
+        private emailService: EmailService
     ) { }
 
     private async handleCheckoutCompleted(session: any) {
@@ -76,16 +78,22 @@ export class StripeController {
             console.log('✅ Consent recorded');
         }
 
-        // 4. Send account activation email (if new user)
+        // 4. Send order confirmation email
+        await this.emailService.sendOrderConfirmation(
+            session.customer_email,
+            user.id,
+            session.metadata.planId,
+            session.amount_total,
+            session.currency
+        )
+
+        // 5. Send account activation email (if new user)
         if (isNewUser) {
-            // TODO: Implement email service
-            console.log('📧 Would send activation email to:', user.email);
-            console.log('   → User should set password and activate account');
-            // await this.emailService.sendAccountActivation(user.email, user.id);
+            console.log('📧 New user - send account setup instructions');
+            // TODO: Implement separate account activation
+
         } else {
-            // Existing user - send order confirmation
-            console.log('📧 Would send order confirmation to:', user.email);
-            // await this.emailService.sendOrderConfirmation(user.email, order.id);
+            console.log('📧 Existing user - order confirmation email sent');
         }
 
         console.log('🎉 Checkout processing complete!');
