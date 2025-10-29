@@ -13,11 +13,19 @@ export class StripeController {
     ) { }
 
     private async handleCheckoutCompleted(session: any) {
-        console.log('🔄 Processing checkout for:', session.customer_email)
+        // Get customer email from either customer_email or customer_details.email
+        const customerEmail = session.customer_email || session.customer_details?.email;
+        console.log('🔄 Processing checkout for:', customerEmail)
+
+        // Check if we have customer email
+        if (!customerEmail) {
+            console.log('⚠️  No customer email in session, skipping user creation');
+            return;
+        }
 
         // 1. Check if user already exists
         let user = await this.prisma.user.findUnique({
-            where: { email: session.customer_email }
+            where: { email: customerEmail }
         })
 
         let isNewUser = false;
@@ -27,7 +35,7 @@ export class StripeController {
             isNewUser = true;
             user = await this.prisma.user.create({
                 data: {
-                    email: session.customer_email,
+                    email: customerEmail,
                     stripeCustomerId: session.customer,
                     role: 'CLIENT',
                     // No password yet - will be set when they activate account
@@ -80,7 +88,7 @@ export class StripeController {
 
         // 4. Send order confirmation email
         await this.emailService.sendOrderConfirmation(
-            session.customer_email,
+            customerEmail,
             user.id,
             session.metadata.planId,
             session.amount_total,
@@ -108,8 +116,10 @@ export class StripeController {
         }
 
         try {
+            // Get raw body for signature verification
+            const rawBody = req.body as Buffer;
             const event = await this.stripeService.constructWebhookEvent(
-                req.body,
+                rawBody,
                 signature
             );
 

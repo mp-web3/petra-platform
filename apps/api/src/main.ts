@@ -1,17 +1,19 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
+import * as express from 'express';
 
 async function bootstrap() {
-    const app = await NestFactory.create(AppModule, {
-        rawBody: true, // Required for Stripe webhooks
-    });
+    const app = await NestFactory.create(AppModule);
 
     // Enable CORS
     app.enableCors({
         origin: process.env.FRONTEND_URL || 'http://localhost:3000',
         credentials: true,
     });
+
+    // Configure raw body for Stripe webhooks
+    app.use('/api/stripe/webhook', express.raw({ type: 'application/json' }));
 
     // Global validation pipe
     app.useGlobalPipes(
