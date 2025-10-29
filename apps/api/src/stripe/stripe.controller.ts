@@ -59,7 +59,7 @@ export class StripeController {
         const order = await this.prisma.order.create({
             data: {
                 userId: user.id,
-                planId: session.metadata.planId,
+                planId: session.metadata?.planId || 'test-plan',
                 amount: session.amount_total,
                 currency: session.currency,
                 status: 'COMPLETED',
@@ -69,8 +69,8 @@ export class StripeController {
         })
         console.log('📦 Order created:', order.id);
 
-        // 3. Create consent record
-        if (session.metadata.tosAccepted === 'true') {
+        // 3. Create consent record (only if metadata exists)
+        if (session.metadata && session.metadata.tosAccepted === 'true') {
             await this.prisma.consent.create({
                 data: {
                     orderId: order.id,
@@ -84,13 +84,15 @@ export class StripeController {
                 }
             })
             console.log('✅ Consent recorded');
+        } else {
+            console.log('⚠️  No consent metadata found, skipping consent record');
         }
 
         // 4. Send order confirmation email
         await this.emailService.sendOrderConfirmation(
             customerEmail,
             user.id,
-            session.metadata.planId,
+            session.metadata?.planId || 'test-plan',
             session.amount_total,
             session.currency
         )
