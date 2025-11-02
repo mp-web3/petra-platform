@@ -41,6 +41,48 @@ enum OrderStatus {
     REFUNDED
 }
 
+enum SignUpStatus {
+    PENDING // Order completed, activation email sent, waiting for password setup
+    ACTIVATED // User has set password and account is fully active
+    EXPIRED // Activation link/token expired (optional, for tracking)
+}
+
+enum EmailType {
+    TRANSACTIONAL
+    MARKETING
+    SIGNUP
+    PASSWORD_RESET
+    WELCOME
+}
+
+enum EmailStatus {
+    SENT
+    FAILED
+    DELIVERED
+    OPENED
+    BOUNCED
+}
+
+
+model EmailLog {
+    id               String         @id @default(cuid())
+    emailType        EmailType
+    orderId          String?        @map("order_id")
+    order            Order?         @relation(fields: [orderId], references: [id])
+    campaign         String?        @map("campaign")
+
+    recipientEmail   String         @map("recipent_email")
+    status           EmailStatus
+    providerId       String?        @map("provider_id")
+    errorMessage     String?        @map("error_message")
+
+    sentAt           DateTime       @default(now()) @map("sent_at")
+    deliveredAt      DateTime?      @map("delivered_at")
+    openedAt         DateTime?      @map("openedAt")
+
+    @@map("email_logs")
+}
+
 model User {
     id               String         @id @default(cuid())
     email            String         @unique
@@ -56,18 +98,20 @@ model User {
 }
 
 model Order {
-    id                    String      @id @default(cuid())
-    user                  User?       @relation(fields: [userId], references: [id])
-    userId                String?     @map("user_id")
-    planId                String      @map("plan_id")
+    id                    String       @id @default(cuid())
+    user                  User?        @relation(fields: [userId], references: [id])
+    userId                String?      @map("user_id")
+    planId                String       @map("plan_id")
     amount                Int
     currency              String
     status                OrderStatus
-    stripeSessionId       String      @unique @map("stripe_session_id")
-    stripePaymentIntentId String?     @unique @map("stripe_payment_intent_id")
+    stripeSessionId       String       @unique @map("stripe_session_id")
+    stripePaymentIntentId String?      @unique @map("stripe_payment_intent_id")
     consent               Consent?
-    createdAt             DateTime    @default(now()) @map("created_at")
-    updatedAt             DateTime    @updatedAt @map("updated_at")
+    signUpStatus          SignUpStatus @default(PENDING) @map("sign_up_status")
+    createdAt             DateTime     @default(now()) @map("created_at")
+    updatedAt             DateTime     @updatedAt @map("updated_at")
+    emailLogs             EmailLog[]
 
     @@map("orders")
 }
