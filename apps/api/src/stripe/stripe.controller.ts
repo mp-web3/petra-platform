@@ -26,6 +26,7 @@ import { SubscriptionService } from '../subscription/subscription.service';
  * All routes under this controller will be prefixed with /api/stripe
  */
 @Controller('api/stripe')
+@SkipThrottle() // Skip rate limiting for all Stripe endpoints (trusted source)
 export class StripeController {
     /**
      * Dependency Injection
@@ -381,7 +382,6 @@ export class StripeController {
      * - All other events: Logged but not handled
      */
     @Post('webhook')
-    @SkipThrottle() // Skip rate limiting for Stripe webhooks (trusted source)
     async handleWebhook(@Req() req: Request, @Res() res: Response) {
         // ============================================================
         // Step 1: Extract and validate Stripe signature
