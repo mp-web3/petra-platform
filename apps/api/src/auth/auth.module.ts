@@ -7,12 +7,14 @@ import { AuthService } from './auth.service';
 import { PrismaModule } from '../prisma/prisma.module';
 import { JwtStrategy } from './jwt.strategy';
 import { EmailModule } from 'src/email/email.module';
+import { HcaptchaModule } from '@gvrs/nestjs-hcaptcha';
 
 @Module({
     imports: [
         PrismaModule,
-        EmailModule, // Provides EmailService for sending activation emails
+        EmailModule,
         PassportModule.register({ defaultStrategy: 'jwt' }),
+        HcaptchaModule,
         JwtModule.registerAsync({
             imports: [ConfigModule],
             useFactory: async (configService: ConfigService) => ({

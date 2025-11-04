@@ -12,6 +12,7 @@ import { EmailModule } from './email/email.module';
 import { AuthModule } from './auth/auth.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { THROTTLE_CONFIG } from './throttle.constants';
+import { HcaptchaModule } from '@gvrs/nestjs-hcaptcha';
 
 // Conditionally import Redis storage for production
 let ThrottlerStorageRedisService: any;
@@ -78,7 +79,10 @@ try {
                 }
             },
         }),
-
+        HcaptchaModule.forRoot({
+            secret: process.env.HCAPTCHA_SECRET_KEY,
+            sitekey: process.env.HCAPTCHA_SITE_KEY,
+        }),
         PrismaModule,
         CheckoutModule,
         StripeModule,

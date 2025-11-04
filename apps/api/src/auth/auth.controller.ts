@@ -5,6 +5,7 @@ import { ResendActivationDto } from './dto/resend-activation.dto';
 import { LoginDto } from './dto/login.dto';
 import { Throttle } from '@nestjs/throttler';
 import { THROTTLE_CONFIG } from '../throttle.constants';
+import { VerifyCaptcha } from '@gvrs/nestjs-hcaptcha';
 
 @Controller('api/auth')
 export class AuthController {
@@ -27,6 +28,7 @@ export class AuthController {
      * @returns User object (without password)
      */
     @Post('activate')
+    @VerifyCaptcha()
     @HttpCode(HttpStatus.OK)
     @Throttle({ default: THROTTLE_CONFIG.auth.activate })
     async activateAccount(@Body() dto: ActivateAccountDto) {
@@ -48,6 +50,7 @@ export class AuthController {
      * @returns User object (without password)
      */
     @Post('resend-activation')
+    @VerifyCaptcha()
     @HttpCode(HttpStatus.OK)
     @Throttle({ default: THROTTLE_CONFIG.auth.resendActivation })
     async resendActivation(@Body() dto: ResendActivationDto) {

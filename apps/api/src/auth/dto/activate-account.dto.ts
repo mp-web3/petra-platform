@@ -25,4 +25,5 @@ export class ActivateAccountDto {
         { message: 'Password must contain at least one lowercase letter, one uppercase letter, and one number' }
     )
     password: string;
+    'h-captcha-response': string;
 }
