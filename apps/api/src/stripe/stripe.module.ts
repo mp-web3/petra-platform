@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { StripeService } from './stripe.service';
 import { StripeController } from './stripe.controller';
@@ -12,7 +12,7 @@ import { SubscriptionModule } from '../subscription/subscription.module';
         ConfigModule,
         EmailModule, // Provides EmailService
         AuthModule, // Provides AuthService for token generation
-        SubscriptionModule, // Provides SubscriptionService for webhook handlers (no longer circular)
+        forwardRef(() => SubscriptionModule), // Module-level circular dependency (SubscriptionModule also imports StripeModule)
     ],
     controllers: [StripeController],
     providers: [StripeService],
