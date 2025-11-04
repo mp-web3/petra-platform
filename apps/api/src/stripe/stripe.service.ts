@@ -48,7 +48,9 @@ export class StripeService {
                 ],
                 success_url: `${frontendUrl}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
                 cancel_url: `${frontendUrl}/checkout/cancel`,
-                metadata,
+                metadata: {
+                    ...metadata,
+                },
             },
             idempotencyKey ? { idempotencyKey } : undefined
         );

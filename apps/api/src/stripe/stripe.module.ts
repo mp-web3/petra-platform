@@ -3,11 +3,19 @@ import { ConfigModule } from '@nestjs/config';
 import { StripeService } from './stripe.service';
 import { StripeController } from './stripe.controller';
 import { EmailService } from 'src/email/email.service';
+import { EmailModule } from '../email/email.module';
+import { AuthModule } from '../auth/auth.module';
+import { SubscriptionModule } from '../subscription/subscription.module';
 
 @Module({
-    imports: [ConfigModule],
+    imports: [
+        ConfigModule,
+        EmailModule, // Provides EmailService
+        AuthModule, // Provides AuthService for token generation
+        SubscriptionModule, // Provides SubscriptionService for subscription management
+    ],
     controllers: [StripeController],
-    providers: [StripeService, EmailService],
+    providers: [StripeService],
     exports: [StripeService],
 })
 export class StripeModule { }

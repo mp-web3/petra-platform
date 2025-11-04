@@ -63,36 +63,42 @@ enum EmailStatus {
     BOUNCED
 }
 
-
 model EmailLog {
-    id               String         @id @default(cuid())
-    emailType        EmailType
-    orderId          String?        @map("order_id")
-    order            Order?         @relation(fields: [orderId], references: [id])
-    campaign         String?        @map("campaign")
+    id        String    @id @default(cuid())
+    emailType EmailType
+    orderId   String?   @map("order_id")
+    order     Order?    @relation(fields: [orderId], references: [id])
+    campaign  String?   @map("campaign")
 
-    recipientEmail   String         @map("recipent_email")
-    status           EmailStatus
-    providerId       String?        @map("provider_id")
-    errorMessage     String?        @map("error_message")
+    recipientEmail String      @map("recipient_email")
+    status         EmailStatus
+    providerId     String?     @map("provider_id")
+    errorMessage   String?     @map("error_message")
 
-    sentAt           DateTime       @default(now()) @map("sent_at")
-    deliveredAt      DateTime?      @map("delivered_at")
-    openedAt         DateTime?      @map("openedAt")
+    sentAt      DateTime  @default(now()) @map("sent_at")
+    deliveredAt DateTime? @map("delivered_at")
+    openedAt    DateTime? @map("opened_at")
 
     @@map("email_logs")
 }
 
 model User {
-    id               String         @id @default(cuid())
-    email            String         @unique
-    name             String?
-    role             UserRole       @default(CLIENT)
-    stripeCustomerId String?        @unique @map("stripe_customer_id")
-    orders           Order[]
-    subscriptions    Subscription[]
-    createdAt        DateTime       @default(now()) @map("created_at")
-    updatedAt        DateTime       @updatedAt @map("updated_at")
+    id                     String            @id @default(cuid())
+    email                  String            @unique
+    name                   String?
+    password               String?           // Nullable - set during activation
+    role                   UserRole          @default(CLIENT)
+    stripeCustomerId       String?          @unique @map("stripe_customer_id")
+    orders                 Order[]
+    subscriptions         Subscription[]
+    activationTokens       ActivationToken[]
+    createdAt              DateTime          @default(now()) @map("created_at")
+    updatedAt              DateTime          @updatedAt @map("updated_at")
+
+    // Activation tracking
+    emailVerified          Boolean           @default(false)
+    activationReminderSent Boolean          @default(false)
+    activatedAt            DateTime?         @map("activated_at")
 
     @@map("users")
 }
@@ -160,4 +166,19 @@ model PlanCatalog {
     active        Boolean              @default(true)
 
     @@map("plan_catalog")
+}
+
+model ActivationToken {
+    id        String   @id @default(cuid())
+    token     String   @unique // Secure random token
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId    String   @map("user_id")
+    expiresAt DateTime @map("expires_at")
+    usedAt    DateTime? @map("used_at") // Track when token was used
+    createdAt DateTime @default(now()) @map("created_at")
+
+    @@index([token]) // Fast lookup by token
+    @@index([userId]) // Fast lookup by user
+    @@index([expiresAt]) // For cleanup of expired tokens
+    @@map("activation_tokens")
 }

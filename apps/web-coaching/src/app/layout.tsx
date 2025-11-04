@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { PetraUIProvider } from '@chakra-ui/react';
+import { AuthProvider } from '@/contexts/AuthContext';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -15,7 +16,9 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <PetraUIProvider>{children}</PetraUIProvider>
+        <PetraUIProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </PetraUIProvider>
       </body>
     </html>
   );

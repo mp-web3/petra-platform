@@ -6,7 +6,9 @@ import { PrismaModule } from './prisma/prisma.module';
 import { CheckoutModule } from './checkout/checkout.module';
 import { StripeModule } from './stripe/stripe.module';
 import { PlansModule } from './plans/plans.module';
-import { EmailModule } from './email/email.module'
+import { EmailModule } from './email/email.module';
+import { AuthModule } from './auth/auth.module';
+import { SubscriptionModule } from './subscription/subscription.module';
 
 @Module({
     imports: [
@@ -18,7 +20,9 @@ import { EmailModule } from './email/email.module'
         CheckoutModule,
         StripeModule,
         PlansModule,
-        EmailModule
+        EmailModule,
+        AuthModule,
+        SubscriptionModule,
     ],
     controllers: [AppController],
     providers: [AppService],
