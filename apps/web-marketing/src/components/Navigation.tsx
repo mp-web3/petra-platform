@@ -12,11 +12,22 @@ import {
   Text,
   CloseButton,
   useDisclosure,
+  Button,
 } from '@chakra-ui/react';
 import { LuMenu } from 'react-icons/lu';
+import { useAuth } from '@/contexts/AuthContext';
+import { useRouter } from 'next/navigation';
 
 export default function Navigation() {
   const { open, onOpen, onClose } = useDisclosure();
+  const { isAuthenticated, logout, loading } = useAuth();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    logout();
+    onClose();
+    router.push('/');
+  };
 
   return (
     <Box as="header" position="fixed" top={0} left={0} right={0} zIndex={99} bg="whiteAlpha.50">
@@ -75,6 +86,34 @@ export default function Navigation() {
                     Coaching Donna
                   </Text>
                 </Link>
+                {!loading && (
+                  <>
+                    {isAuthenticated ? (
+                      <>
+                        <Link href="/dashboard" onClick={onClose}>
+                          <Text fontSize={['3xl', '4xl', '5xl']} fontWeight="bold">
+                            Dashboard
+                          </Text>
+                        </Link>
+                        <Button
+                          variant="outline"
+                          onClick={handleLogout}
+                          size="lg"
+                          w="full"
+                          maxW="300px"
+                        >
+                          Esci
+                        </Button>
+                      </>
+                    ) : (
+                      <Link href="/login" onClick={onClose}>
+                        <Text fontSize={['3xl', '4xl', '5xl']} fontWeight="bold">
+                          Login
+                        </Text>
+                      </Link>
+                    )}
+                  </>
+                )}
               </VStack>
             </Drawer.Body>
           </Drawer.Content>

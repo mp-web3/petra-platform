@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Provider } from '@/components/providers';
+import { AuthProvider } from '@/contexts/AuthContext';
 import Navigation from '@/components/Navigation';
 import './globals.css';
 
@@ -19,8 +20,10 @@ export default function RootLayout({
     <html lang="it" suppressHydrationWarning>
       <body suppressHydrationWarning>
         <Provider>
-          <Navigation />
-          {children}
+          <AuthProvider>
+            <Navigation />
+            {children}
+          </AuthProvider>
         </Provider>
       </body>
     </html>

@@ -35,17 +35,17 @@ export default function CheckoutSuccessPage() {
                 ✓ Pagamento confermato
               </Text>
               <Text fontSize="sm" color="text.onPage">
-                Riceverai a breve un'email di conferma con:
+                Riceverai a breve:
               </Text>
               <VStack as="ul" align="flex-start" gap={2} pl={6} listStyleType="disc" w="full">
                 <Text as="li" fontSize="sm" color="text.onPage">
-                  Link per accedere all'app
+                  Una mail con il riepilogo del tuo ordine
                 </Text>
                 <Text as="li" fontSize="sm" color="text.onPage">
-                  Istruzioni per la tua prima consulenza video
+                  Una mail per attivare il tuo account
                 </Text>
                 <Text as="li" fontSize="sm" color="text.onPage">
-                  Credenziali di accesso
+                  Una mail con la ricevuta del pagamento
                 </Text>
                 <Text as="li" fontSize="sm" color="text.onPage">
                   Ricevuta del pagamento
@@ -64,21 +64,17 @@ export default function CheckoutSuccessPage() {
                   Controlla la tua email (anche nello spam)
                 </Text>
                 <Text as="li" fontSize="sm" color="text.onPage">
-                  Scarica l'app CoachPlus
+                  Clicca sul link di attivazione contenuto nella mail "Attiva il tuo account"
                 </Text>
                 <Text as="li" fontSize="sm" color="text.onPage">
-                  Prenota la tua consulenza iniziale
-                </Text>
-                <Text as="li" fontSize="sm" color="text.onPage">
-                  Inizia il tuo percorso di trasformazione!
+                  Dopo aver attivato il tuo account riceverai un'altra mail per prenotare la tua prima chiamata di consulenza!
                 </Text>
               </VStack>
             </VStack>
           </Box>
 
           <Text fontSize="sm" color="text.muted">
-            Hai domande? Contattami via WhatsApp o email, trovi i contatti nella tua email di
-            benvenuto.
+            Hai domande? Contattami via email, trovi i contatti nella tua email di benvenuto.
           </Text>
 
           <Button asChild size="lg">
