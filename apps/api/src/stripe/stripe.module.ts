@@ -12,7 +12,7 @@ import { SubscriptionModule } from '../subscription/subscription.module';
         ConfigModule,
         EmailModule, // Provides EmailService
         AuthModule, // Provides AuthService for token generation
-        SubscriptionModule, // Provides SubscriptionService for subscription management
+        SubscriptionModule, // Provides SubscriptionService for webhook handlers (no longer circular)
     ],
     controllers: [StripeController],
     providers: [StripeService],

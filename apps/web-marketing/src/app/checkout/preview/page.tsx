@@ -94,9 +94,20 @@ function PreviewOrderContent() {
       if (result.url) {
         window.location.href = result.url;
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Checkout error:', err);
-      setError('Si è verificato un errore. Riprova più tardi.');
+
+      // Extract error message for better user feedback
+      let errorMessage = 'Si è verificato un errore. Riprova più tardi.';
+      if (err?.response?.data?.error) {
+        errorMessage = err.response.data.error;
+      } else if (err?.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      } else if (err?.message) {
+        errorMessage = err.message;
+      }
+
+      setError(errorMessage);
       setCaptchaToken(null); // Reset CAPTCHA on error so user can try again
       setLoading(false);
     }

@@ -66,5 +66,39 @@ export class StripeService {
         }
         return this.stripe.webhooks.constructEvent(payload, signature, webhookSecret);
     }
+
+    /**
+     * Retrieve a subscription from Stripe
+     * 
+     * @param stripeSubscriptionId - Stripe subscription ID
+     * @returns Stripe subscription object
+     */
+    async retrieveSubscription(stripeSubscriptionId: string): Promise<Stripe.Subscription> {
+        return this.stripe.subscriptions.retrieve(stripeSubscriptionId);
+    }
+
+    /**
+     * Cancel a subscription in Stripe
+     * 
+     * @param stripeSubscriptionId - Stripe subscription ID
+     * @returns Cancelled Stripe subscription object
+     */
+    async cancelSubscription(stripeSubscriptionId: string): Promise<Stripe.Subscription> {
+        return this.stripe.subscriptions.cancel(stripeSubscriptionId);
+    }
+
+    /**
+     * Update a subscription in Stripe
+     * 
+     * @param stripeSubscriptionId - Stripe subscription ID
+     * @param params - Subscription update parameters
+     * @returns Updated Stripe subscription object
+     */
+    async updateSubscription(
+        stripeSubscriptionId: string,
+        params: Stripe.SubscriptionUpdateParams
+    ): Promise<Stripe.Subscription> {
+        return this.stripe.subscriptions.update(stripeSubscriptionId, params);
+    }
 }
 

@@ -5,9 +5,12 @@ import { PrismaModule } from '../prisma/prisma.module';
 import { StripeModule } from '../stripe/stripe.module';
 
 @Module({
-    imports: [PrismaModule, StripeModule],
+    imports: [
+        PrismaModule,
+        StripeModule,
+    ],
     controllers: [SubscriptionController],
     providers: [SubscriptionService],
-    exports: [SubscriptionService], // Export for use in StripeController
+    exports: [SubscriptionService],
 })
-export class SubscriptionModule {}
+export class SubscriptionModule { }

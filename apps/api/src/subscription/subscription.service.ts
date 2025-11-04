@@ -58,11 +58,9 @@ export class SubscriptionService {
             throw new NotFoundException('No active subscription found');
         }
 
-        const stripe = this.stripeService.getStripeClient();
-
         if (cancelImmediately) {
             // Cancel immediately - user loses access right away
-            await stripe.subscriptions.cancel(subscription.stripeSubscriptionId);
+            await this.stripeService.cancelSubscription(subscription.stripeSubscriptionId);
 
             // Update database
             const updated = await this.prisma.subscription.update({
@@ -76,7 +74,7 @@ export class SubscriptionService {
             return updated;
         } else {
             // Cancel at period end - user keeps access until period ends
-            await stripe.subscriptions.update(subscription.stripeSubscriptionId, {
+            await this.stripeService.updateSubscription(subscription.stripeSubscriptionId, {
                 cancel_at_period_end: true,
             });
 
@@ -120,11 +118,10 @@ export class SubscriptionService {
         }
 
         // Check if subscription exists in Stripe
-        const stripe = this.stripeService.getStripeClient();
         let stripeSubscription;
 
         try {
-            stripeSubscription = await stripe.subscriptions.retrieve(
+            stripeSubscription = await this.stripeService.retrieveSubscription(
                 subscription.stripeSubscriptionId
             );
         } catch (error) {
@@ -137,7 +134,7 @@ export class SubscriptionService {
         }
 
         // Remove cancellation flag
-        await stripe.subscriptions.update(subscription.stripeSubscriptionId, {
+        await this.stripeService.updateSubscription(subscription.stripeSubscriptionId, {
             cancel_at_period_end: false,
         });
 
@@ -170,10 +167,9 @@ export class SubscriptionService {
             throw new NotFoundException('Subscription not found');
         }
 
-        const stripe = this.stripeService.getStripeClient();
-        const stripeSubscription = await stripe.subscriptions.retrieve(
+        const stripeSubscription = await this.stripeService.retrieveSubscription(
             subscription.stripeSubscriptionId
-        ) as any; // Stripe subscription object
+        );
 
         // Map Stripe status to our status enum
         const statusMap: Record<string, 'ACTIVE' | 'CANCELLED' | 'PAST_DUE' | 'TRIALING' | 'INCOMPLETE'> = {
@@ -194,8 +190,8 @@ export class SubscriptionService {
             data: {
                 status,
                 cancelAtPeriodEnd: stripeSubscription.cancel_at_period_end || false,
-                currentPeriodStart: new Date(stripeSubscription.current_period_start * 1000),
-                currentPeriodEnd: new Date(stripeSubscription.current_period_end * 1000),
+                currentPeriodStart: new Date((stripeSubscription as any).current_period_start * 1000),
+                currentPeriodEnd: new Date((stripeSubscription as any).current_period_end * 1000),
             },
         });
 

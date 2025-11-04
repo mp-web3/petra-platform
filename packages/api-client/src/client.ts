@@ -36,6 +36,27 @@ export class ApiClient {
         this.axiosInstance.interceptors.response.use(
             (response) => response,
             (error) => {
+                // Log error details for debugging
+                if (error.response) {
+                    // Server responded with error status
+                    console.error('API Error Response:', {
+                        status: error.response.status,
+                        statusText: error.response.statusText,
+                        data: error.response.data,
+                        url: error.config?.url,
+                    });
+                } else if (error.request) {
+                    // Request made but no response (network error, CORS, etc.)
+                    console.error('API Network Error:', {
+                        message: error.message,
+                        code: error.code,
+                        url: error.config?.url,
+                    });
+                } else {
+                    // Error setting up request
+                    console.error('API Request Setup Error:', error.message);
+                }
+
                 // Handle errors globally
                 if (error.response?.status === 401) {
                     // Handle unauthorized
