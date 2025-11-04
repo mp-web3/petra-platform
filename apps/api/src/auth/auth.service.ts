@@ -21,8 +21,11 @@ export class AuthService {
     /**
      * Generates a secure activation token and stores it in the database
      * 
+     * The token is hashed before storing for security. The plain token is returned
+     * for use in the activation email link.
+     * 
      * @param userId - The user ID to generate token for
-     * @returns The generated token string
+     * @returns The generated token string (plain text, for email)
      */
     async generateActivationToken(userId: string): Promise<string> {
         // Generate cryptographically secure random token
@@ -30,62 +33,105 @@ export class AuthService {
         const tokenBytes = randomBytes(32);
         const token = tokenBytes.toString('base64url'); // Base64URL encoding (URL-safe)
 
-        // Calculate expiration date (7 days from now)
+        // Hash token before storing (similar to password hashing)
+        // Using bcrypt with 10 salt rounds for security
+        const tokenHash = await bcrypt.hash(token, 10);
+
+        // Calculate expiration date (24 hours from now)
         const expiresAt = new Date(Date.now() + this.TOKEN_EXPIRATION_MS);
 
-        // Store token in database
+        // Store hashed token in database
         await this.prisma.activationToken.create({
             data: {
-                token,
+                tokenHash,
                 userId,
                 expiresAt,
             },
         });
 
+        // Return plain token for email (never store plain token)
         return token;
     }
 
     /**
      * Validates an activation token and returns the associated user
      * 
-     * @param token - The activation token to validate
+     * Compares the provided token hash against stored hashes to find a match.
+     * 
+     * @param token - The activation token to validate (plain text)
      * @param userId - The user ID associated with the token
      * @returns The user if token is valid
      * @throws BadRequestException if token is invalid, expired, or already used
      */
     async validateActivationToken(token: string, userId: string) {
-        // Find token in database
-        const activationToken = await this.prisma.activationToken.findUnique({
-            where: { token },
+        // Get all unused tokens for this user (we need to check each one)
+        const activationTokens = await this.prisma.activationToken.findMany({
+            where: {
+                userId,
+                usedAt: null, // Only check unused tokens
+            },
             include: { user: true },
         });
 
-        // Check if token exists
-        if (!activationToken) {
+        // Check if user has any tokens
+        if (activationTokens.length === 0) {
             throw new BadRequestException('Invalid activation token');
         }
 
-        // Check if token belongs to the correct user
-        if (activationToken.userId !== userId) {
-            throw new BadRequestException('Token does not match user ID');
+        // Find token by comparing hash (similar to password verification)
+        let validToken = null;
+        for (const activationToken of activationTokens) {
+            const isTokenValid = await bcrypt.compare(token, activationToken.tokenHash);
+            if (isTokenValid) {
+                validToken = activationToken;
+                break;
+            }
+        }
+
+        // Check if token was found
+        if (!validToken) {
+            throw new BadRequestException('Invalid activation token');
         }
 
         // Check if token has expired
-        if (activationToken.expiresAt < new Date()) {
+        if (validToken.expiresAt < new Date()) {
             throw new BadRequestException('Activation token has expired. Please request a new activation link.');
         }
 
-        // Check if token has already been used
-        if (activationToken.usedAt) {
-            throw new BadRequestException('This activation link has already been used. Please request a new one.');
-        }
-
         // Check if user still needs activation (password not set)
-        if (activationToken.user.password) {
+        if (validToken.user.password) {
             throw new BadRequestException('Account is already activated');
         }
 
-        return activationToken.user;
+        return validToken.user;
+    }
+
+    /**
+     * Helper method to find activation token by hash comparison
+     * Used internally for token operations
+     * 
+     * @param token - Plain text token
+     * @param userId - User ID
+     * @returns ActivationToken record if found
+     */
+    private async findTokenByHash(token: string, userId: string) {
+        // Get all unused tokens for this user
+        const activationTokens = await this.prisma.activationToken.findMany({
+            where: {
+                userId,
+                usedAt: null,
+            },
+        });
+
+        // Find token by comparing hash
+        for (const activationToken of activationTokens) {
+            const isTokenValid = await bcrypt.compare(token, activationToken.tokenHash);
+            if (isTokenValid) {
+                return activationToken;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -113,11 +159,14 @@ export class AuthService {
             },
         });
 
-        // Mark token as used
-        await this.prisma.activationToken.update({
-            where: { token: dto.token },
-            data: { usedAt: new Date() },
-        });
+        // Mark token as used (find by hash comparison)
+        const tokenRecord = await this.findTokenByHash(dto.token, dto.userId);
+        if (tokenRecord) {
+            await this.prisma.activationToken.update({
+                where: { id: tokenRecord.id },
+                data: { usedAt: new Date() },
+            });
+        }
 
         // Update order sign-up status
         await this.prisma.order.updateMany({
