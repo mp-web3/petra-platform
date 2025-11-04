@@ -13,6 +13,7 @@
  * See main.ts for express.raw() middleware configuration.
  */
 import { Controller, Post, Req, Res, HttpStatus } from '@nestjs/common';
+import { SkipThrottle } from '@nestjs/throttler';
 import { Request, Response } from 'express';
 import { StripeService } from './stripe.service';
 import { PrismaService } from '../prisma/prisma.service';
@@ -380,6 +381,7 @@ export class StripeController {
      * - All other events: Logged but not handled
      */
     @Post('webhook')
+    @SkipThrottle() // Skip rate limiting for Stripe webhooks (trusted source)
     async handleWebhook(@Req() req: Request, @Res() res: Response) {
         // ============================================================
         // Step 1: Extract and validate Stripe signature

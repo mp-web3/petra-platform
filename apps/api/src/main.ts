@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
+import { ThrottleExceptionFilter } from './common/filters/throttle-exception.filter';
 import * as express from 'express';
 
 async function bootstrap() {
@@ -23,6 +24,9 @@ async function bootstrap() {
             transform: true,
         })
     );
+
+    // Apply custom throttle exception filter globally
+    app.useGlobalFilters(new ThrottleExceptionFilter());
 
     const port = process.env.PORT || 3001;
     await app.listen(port);

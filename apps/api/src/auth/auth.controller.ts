@@ -3,10 +3,12 @@ import { AuthService } from './auth.service';
 import { ActivateAccountDto } from './dto/activate-account.dto';
 import { ResendActivationDto } from './dto/resend-activation.dto';
 import { LoginDto } from './dto/login.dto';
+import { Throttle } from '@nestjs/throttler';
+import { THROTTLE_CONFIG } from '../throttle.constants';
 
 @Controller('api/auth')
 export class AuthController {
-    constructor(private readonly authService: AuthService) {}
+    constructor(private readonly authService: AuthService) { }
 
     /**
      * POST /api/auth/activate
@@ -26,6 +28,7 @@ export class AuthController {
      */
     @Post('activate')
     @HttpCode(HttpStatus.OK)
+    @Throttle({ default: THROTTLE_CONFIG.auth.activate })
     async activateAccount(@Body() dto: ActivateAccountDto) {
         const user = await this.authService.activateAccount(dto);
         return {
@@ -46,6 +49,7 @@ export class AuthController {
      */
     @Post('resend-activation')
     @HttpCode(HttpStatus.OK)
+    @Throttle({ default: THROTTLE_CONFIG.auth.resendActivation })
     async resendActivation(@Body() dto: ResendActivationDto) {
         const result = await this.authService.resendActivationEmail(dto.email);
         return result;
@@ -63,6 +67,7 @@ export class AuthController {
      */
     @Post('login')
     @HttpCode(HttpStatus.OK)
+    @Throttle({ default: THROTTLE_CONFIG.auth.login })
     async login(@Body() dto: LoginDto) {
         const result = await this.authService.login(dto);
         return {

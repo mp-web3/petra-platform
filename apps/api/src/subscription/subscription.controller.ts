@@ -11,8 +11,10 @@ import {
     HttpStatus,
     BadRequestException,
 } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { SubscriptionService } from './subscription.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { THROTTLE_CONFIG } from '../throttle.constants';
 
 /**
  * SubscriptionController
@@ -36,6 +38,7 @@ export class SubscriptionController {
      * @returns User's subscription or null
      */
     @Get()
+    @Throttle({ default: THROTTLE_CONFIG.subscription })
     async getSubscription(@Request() req: any) {
         // Get userId from JWT token (set by JwtAuthGuard)
         const userId = req.user.id;
@@ -62,6 +65,7 @@ export class SubscriptionController {
      */
     @Post('cancel')
     @HttpCode(HttpStatus.OK)
+    @Throttle({ default: THROTTLE_CONFIG.subscription })
     async cancelSubscription(
         @Request() req: any,
         @Body() body: { cancelImmediately?: boolean } = {}
@@ -96,6 +100,7 @@ export class SubscriptionController {
      */
     @Post('reactivate')
     @HttpCode(HttpStatus.OK)
+    @Throttle({ default: THROTTLE_CONFIG.subscription })
     async reactivateSubscription(@Request() req: any) {
         // Get userId from JWT token (set by JwtAuthGuard)
         const userId = req.user.id;
@@ -120,6 +125,7 @@ export class SubscriptionController {
      * @returns Updated subscription
      */
     @Get('sync/:subscriptionId')
+    @Throttle({ default: THROTTLE_CONFIG.subscription })
     async syncSubscription(@Param('subscriptionId') subscriptionId: string) {
         const subscription = await this.subscriptionService.syncFromStripe(subscriptionId);
         return {

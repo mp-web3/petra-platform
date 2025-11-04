@@ -1,5 +1,7 @@
 import { Controller, Get, Post, Body, HttpStatus } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { EmailService } from './email.service';
+import { THROTTLE_CONFIG } from '../throttle.constants';
 
 @Controller('api/email')
 export class EmailController {
@@ -8,6 +10,7 @@ export class EmailController {
     ) { }
 
     @Post('test')
+    @Throttle({ default: THROTTLE_CONFIG.email.test })
     async sendTestEmail(@Body() body: { name: string }) {
         try {
             const result = await this.emailService.sendTestEmail(body.name);
@@ -36,6 +39,7 @@ export class EmailController {
     }
 
     @Get('status')
+    @Throttle({ default: THROTTLE_CONFIG.email.status })
     async getEmailStatus() {
         return {
             status: 'healthy',
