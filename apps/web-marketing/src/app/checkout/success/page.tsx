@@ -55,7 +55,7 @@ export default function CheckoutSuccessPage() {
           </Box>
 
           <Box w="full" bg="neutralLight.default" p={6} borderRadius="lg">
-            <VStack gap={4}>
+            <VStack gap={4} align="flex-start">
               <Text fontWeight="semibold" color="text.primary">
                 🚀 Prossimi Passi
               </Text>

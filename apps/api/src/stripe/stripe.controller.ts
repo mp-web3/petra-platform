@@ -319,6 +319,36 @@ export class StripeController {
         }
 
         // ============================================================
+        // STEP 4.5: Send Admin Notification Email
+        // ============================================================
+        // Notify administrators about the new order
+        // This is sent asynchronously and doesn't block the webhook
+        // Email failures don't fail the webhook - order is already created
+        try {
+            const adminNotificationResult = await this.emailService.sendAdminOrderNotification(
+                order.id, // Order ID
+                customerEmail, // Customer email
+                session.customer_details?.name || null, // Customer name (optional)
+                session.metadata?.planId || 'test-plan', // Plan identifier
+                session.amount_total, // Order amount in cents
+                session.currency // Currency code
+            );
+
+            if (adminNotificationResult.success) {
+                console.log('✅ Admin notification email sent and logged:', adminNotificationResult.emailLogId);
+            } else {
+                // Admin notification failed but webhook continues - order is still valid
+                console.error('⚠️  Admin notification email failed:', adminNotificationResult.errorMessage);
+                // Note: This is non-critical - admins can still see orders in dashboard
+            }
+        } catch (error: any) {
+            // Catch any unexpected errors in admin notification
+            // Don't let this break the webhook
+            console.error('❌ Unexpected error sending admin notification:', error.message || error);
+            // Webhook continues - order is still valid
+        }
+
+        // ============================================================
         // STEP 5: Send Account Activation Email (New Users Only)
         // ============================================================
         // Only send activation email to new users

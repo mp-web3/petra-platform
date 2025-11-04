@@ -264,12 +264,229 @@ export class EmailService {
         }
     }
 
+    /**
+     * Sends admin notification email when a new order is placed
+     * 
+     * @param orderId - Order ID
+     * @param customerEmail - Customer email address
+     * @param customerName - Customer name (optional)
+     * @param planId - Plan identifier
+     * @param amount - Order amount in cents
+     * @param currency - Currency code
+     * @returns Result with success status and email log ID
+     */
+    async sendAdminOrderNotification(
+        orderId: string,
+        customerEmail: string,
+        customerName: string | null,
+        planId: string,
+        amount: number,
+        currency: string,
+    ) {
+        // Get admin emails from environment variable
+        const adminEmailsStr = this.configService.get<string>('ADMIN_EMAILS');
+
+        // Early return if no admin emails configured
+        if (!adminEmailsStr || adminEmailsStr.trim() === '') {
+            console.log('ℹ️  ADMIN_EMAILS not configured, skipping admin notification');
+            return {
+                success: false,
+                errorMessage: 'ADMIN_EMAILS not configured',
+                emailLogId: null as string | null,
+            };
+        }
+
+        // Parse admin emails (comma-separated)
+        const adminEmails = adminEmailsStr
+            .split(',')
+            .map(email => email.trim())
+            .filter(email => email.length > 0);
+
+        if (adminEmails.length === 0) {
+            console.log('ℹ️  No valid admin emails found, skipping admin notification');
+            return {
+                success: false,
+                errorMessage: 'No valid admin emails found',
+                emailLogId: null as string | null,
+            };
+        }
+
+        // Create email log entry for each admin email
+        const emailLogs = await Promise.all(
+            adminEmails.map(email =>
+                this.prisma.emailLog.create({
+                    data: {
+                        emailType: 'TRANSACTIONAL',
+                        orderId: orderId,
+                        recipientEmail: email,
+                        status: 'SENT', // Will be updated if it fails
+                        sentAt: new Date(),
+                    }
+                })
+            )
+        );
+
+        try {
+            // Convert amount from cents to euros
+            const amountInEuros = (amount / 100).toFixed(2);
+
+            // Get plan name based on planId
+            const planName = this.getPlanName(planId);
+
+            // Format customer name or use email
+            const displayName = customerName || customerEmail;
+
+            // Get frontend URL for admin dashboard link (optional)
+            const frontendUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3000';
+            const adminDashboardUrl = `${frontendUrl}/dashboard`;
+
+            // Send email to all admin addresses
+            const result = await this.resend.emails.send({
+                from: 'Petra Coaching <noreply@coachingpetra.com>',
+                to: adminEmails, // Array of email addresses
+                subject: `🎉 Nuovo Ordine Ricevuto - ${planName} - €${amountInEuros}`,
+                html: `
+                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+                        <div style="text-align: center; margin-bottom: 30px;">
+                            <h1 style="color: #2D3748; margin-bottom: 10px;">🎉 Nuovo Ordine Ricevuto</h1>
+                            <p style="color: #718096; font-size: 18px;">Notifica automatica per nuovo ordine</p>
+                        </div>
+                        
+                        <div style="background-color: #F7FAFC; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+                            <h2 style="color: #2D3748; margin-bottom: 15px;">📦 Dettagli Ordine</h2>
+                            
+                            <div style="margin-bottom: 15px;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                    <span style="font-weight: bold; color: #4A5568;">ID Ordine:</span>
+                                    <span style="color: #2D3748; font-family: monospace;">${orderId}</span>
+                                </div>
+                                
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                    <span style="font-weight: bold; color: #4A5568;">Cliente:</span>
+                                    <span style="color: #2D3748;">${displayName}</span>
+                                </div>
+                                
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                    <span style="font-weight: bold; color: #4A5568;">Email:</span>
+                                    <span style="color: #2D3748;">
+                                        <a href="mailto:${customerEmail}" style="color: #3182CE; text-decoration: none;">${customerEmail}</a>
+                                    </span>
+                                </div>
+                                
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                    <span style="font-weight: bold; color: #4A5568;">Piano:</span>
+                                    <span style="color: #2D3748;">${planName}</span>
+                                </div>
+                                
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                    <span style="font-weight: bold; color: #4A5568;">Importo:</span>
+                                    <span style="color: #2D3748; font-weight: bold; font-size: 18px;">€${amountInEuros} ${currency.toUpperCase()}</span>
+                                </div>
+                                
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span style="font-weight: bold; color: #4A5568;">Data:</span>
+                                    <span style="color: #2D3748;">${new Date().toLocaleString('it-IT', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                })}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="background-color: #E6FFFA; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+                            <h3 style="color: #2D3748; margin-bottom: 10px;">📋 Prossimi Passi</h3>
+                            <ul style="color: #4A5568; line-height: 1.8; margin: 0; padding-left: 20px;">
+                                <li>Verifica i dettagli dell'ordine nel sistema</li>
+                                <li>Controlla che l'email di conferma sia stata inviata al cliente</li>
+                                <li>Se è un nuovo cliente, verifica che l'email di attivazione sia stata inviata</li>
+                                <li>Prepara il piano di coaching personalizzato</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="text-align: center; margin-bottom: 30px;">
+                            <a href="${adminDashboardUrl}" style="background-color: #3182CE; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: bold;">
+                                Vai alla Dashboard
+                            </a>
+                        </div>
+                        
+                        <div style="text-align: center; padding-top: 20px; border-top: 1px solid #E2E8F0;">
+                            <p style="color: #A0AEC0; font-size: 14px; margin: 0;">
+                                Petra Coaching - Sistema di Notifiche Automatiche
+                            </p>
+                        </div>
+                    </div>
+                `
+            });
+
+            // Update all email logs with provider ID
+            const providerId = (result.data?.id as string) || null;
+            await Promise.all(
+                emailLogs.map(emailLog =>
+                    this.prisma.emailLog.update({
+                        where: { id: emailLog.id },
+                        data: {
+                            status: 'SENT',
+                            providerId: providerId,
+                        }
+                    })
+                )
+            );
+
+            console.log(`✅ Admin notification sent to ${adminEmails.length} admin(s):`, adminEmails.join(', '), 'Provider ID:', providerId);
+            return {
+                success: true,
+                providerId: providerId,
+                status: 'SENT',
+                emailLogId: emailLogs[0]?.id || null, // Return first email log ID for reference
+            };
+        } catch (error: any) {
+            // Update all email logs with failure status
+            await Promise.all(
+                emailLogs.map(emailLog =>
+                    this.prisma.emailLog.update({
+                        where: { id: emailLog.id },
+                        data: {
+                            status: 'FAILED',
+                            errorMessage: error.message || 'Unknown error',
+                        }
+                    })
+                )
+            );
+
+            console.error('❌ Failed to send admin notification email:', error.message || error);
+
+            // Return failure info instead of throwing (so webhook doesn't fail)
+            return {
+                success: false,
+                providerId: null as string | null,
+                status: 'FAILED' as const,
+                errorMessage: error.message || 'Unknown error',
+                emailLogId: emailLogs[0]?.id || null,
+            };
+        }
+    }
+
     private getPlanName(planId: string): string {
         const planNames: { [key: string]: string } = {
             'starter-plan': 'Piano Starter',
             'premium-plan': 'Piano Premium',
             'coaching-donna-starter': 'Coaching Donna - Starter',
             'coaching-donna-premium': 'Coaching Donna - Premium',
+            'woman-starter-6w': 'Coaching Donna - Starter (6 settimane)',
+            'woman-starter-18w': 'Coaching Donna - Starter (18 settimane)',
+            'woman-starter-36w': 'Coaching Donna - Starter (36 settimane)',
+            'woman-premium-6w': 'Coaching Donna - Premium (6 settimane)',
+            'woman-premium-18w': 'Coaching Donna - Premium (18 settimane)',
+            'woman-premium-36w': 'Coaching Donna - Premium (36 settimane)',
+            'man-starter-6w': 'Coaching Uomo - Starter (6 settimane)',
+            'man-starter-18w': 'Coaching Uomo - Starter (18 settimane)',
+            'man-starter-36w': 'Coaching Uomo - Starter (36 settimane)',
+            'man-premium-6w': 'Coaching Uomo - Premium (6 settimane)',
+            'man-premium-18w': 'Coaching Uomo - Premium (18 settimane)',
+            'man-premium-36w': 'Coaching Uomo - Premium (36 settimane)',
         };
 
         return planNames[planId] || planId;
