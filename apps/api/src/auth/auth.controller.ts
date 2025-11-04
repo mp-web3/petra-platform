@@ -1,6 +1,7 @@
 import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ActivateAccountDto } from './dto/activate-account.dto';
+import { ResendActivationDto } from './dto/resend-activation.dto';
 import { LoginDto } from './dto/login.dto';
 
 @Controller('api/auth')
@@ -12,6 +13,7 @@ export class AuthController {
      * 
      * Activates a user account by validating the activation token
      * and setting the user's password and name.
+     * Notice: Activation token expires after 24hours.
      * 
      * Expected flow:
      * 1. User receives activation email with token and userId
@@ -32,6 +34,23 @@ export class AuthController {
             user,
         };
     }
+
+    /**
+     * POST /api/auth/activate
+     * Activates a user account by sending a new activation token and validating itvalidating the activation token
+     * and setting the user's password and name.
+     * Notice: Activation token expires after 24hours.
+     * 
+     * @param dto - Activation data
+     * @returns User object (without password)
+     */
+    @Post('resend-activation')
+    @HttpCode(HttpStatus.OK)
+    async resendActivation(@Body() dto: ResendActivationDto) {
+        const result = await this.authService.resendActivationEmail(dto.email);
+        return result;
+    }
+
 
     /**
      * POST /api/auth/login

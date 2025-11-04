@@ -334,9 +334,9 @@ export class StripeController {
             // Email contains link: /activate?token={token}&userId={userId}
             const activationResult = await this.emailService.sendAccountActivation(
                 customerEmail, // Recipient
-                order.id, // Link email to order (for tracking)
                 user.id, // User ID for activation link
-                activationToken // Secure token for password setup
+                activationToken, // Secure token for password setup
+                order.id // Link email to order (for tracking) - optional
             );
 
             // Check result and log

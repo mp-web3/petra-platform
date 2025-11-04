@@ -163,15 +163,15 @@ export class EmailService {
 
     async sendAccountActivation(
         email: string,
-        orderId: string,
         userId: string,
         activationToken: string,
+        orderId?: string | null, // Optional - for future signups without orders
     ) {
         // Create email log entry first
         let emailLog = await this.prisma.emailLog.create({
             data: {
                 emailType: 'SIGNUP',
-                orderId: orderId,
+                orderId: orderId || null, // Can be null if no order (e.g., direct signup)
                 recipientEmail: email,
                 status: 'SENT',
                 sentAt: new Date(),

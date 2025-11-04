@@ -1,6 +1,7 @@
 import { Injectable, BadRequestException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
+import { EmailService } from 'src/email/email.service';
 import { randomBytes } from 'crypto';
 import * as bcrypt from 'bcrypt';
 import { ActivateAccountDto } from './dto/activate-account.dto';
@@ -8,12 +9,13 @@ import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
-    // Token expiration: 7 days (in milliseconds)
-    private readonly TOKEN_EXPIRATION_MS = 7 * 24 * 60 * 60 * 1000;
+    // Token expiration: 1 day (in milliseconds)
+    private readonly TOKEN_EXPIRATION_MS = 1 * 24 * 60 * 60 * 1000;
 
     constructor(
         private prisma: PrismaService,
-        private jwtService: JwtService
+        private jwtService: JwtService,
+        private emailService: EmailService
     ) { }
 
     /**
@@ -247,5 +249,41 @@ export class AuthService {
         } catch (error) {
             throw new UnauthorizedException('Invalid token');
         }
+    }
+
+    async resendActivationEmail(email: string) {
+        const user = await this.prisma.user.findUnique({
+            where: { email }
+        })
+
+        if (!user) {
+            return {
+                success: true,
+                message: 'If account exists, email sent'
+            }
+        }
+
+        if (user.activatedAt) {
+            throw new BadRequestException('Account is already activated');
+        }
+
+        await this.invalidateUserTokens(user.id);
+
+        const newToken = await this.generateActivationToken(user.id);
+
+        // Send activation email (orderId is optional - can be null for direct signups)
+        // For resend, we don't require an order - supports future direct signups without orders
+        const activationResult = await this.emailService.sendAccountActivation(
+            email,
+            user.id,
+            newToken,
+            null // No orderId for resend - user might not have an order (future feature)
+        );
+
+        return {
+            success: true,
+            message: 'If account exists and is not activated, activation email has been sent',
+            emailLogId: activationResult.emailLogId,
+        };
     }
 }

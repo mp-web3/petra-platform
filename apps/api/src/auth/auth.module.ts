@@ -6,10 +6,12 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { PrismaModule } from '../prisma/prisma.module';
 import { JwtStrategy } from './jwt.strategy';
+import { EmailModule } from 'src/email/email.module';
 
 @Module({
     imports: [
         PrismaModule,
+        EmailModule, // Provides EmailService for sending activation emails
         PassportModule.register({ defaultStrategy: 'jwt' }),
         JwtModule.registerAsync({
             imports: [ConfigModule],
@@ -26,4 +28,4 @@ import { JwtStrategy } from './jwt.strategy';
     providers: [AuthService, JwtStrategy],
     exports: [AuthService, JwtModule, PassportModule], // Export for use in other modules
 })
-export class AuthModule {}
+export class AuthModule { }
