@@ -70,7 +70,7 @@ export class EmailService {
             const result = await this.resend.emails.send({
                 from: 'Petra Coaching <noreply@coachingpetra.com>',
                 to: email,
-                subject: '🎉 Ordine Confermato - Benvenuta nel tuo percorso di coaching!',
+                subject: '🎉 Ordine Confermato - Grazie per aver scelto Petra Coaching',
                 html: `
                     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
                         <div style="text-align: center; margin-bottom: 30px;">
@@ -81,15 +81,15 @@ export class EmailService {
                         <div style="background-color: #F7FAFC; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
                             <h2 style="color: #2D3748; margin-bottom: 15px;">Dettagli del tuo ordine</h2>
                             <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                                <span style="font-weight: bold;">Piano:</span>
+                                <span style="font-weight: bold;">Piano: </span>
                                 <span>${planName}</span>
                             </div>
                             <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                                <span style="font-weight: bold;">Importo:</span>
+                                <span style="font-weight: bold;">Importo: </span>
                                 <span>€${amountInEuros} ${currency.toUpperCase()}</span>
                             </div>
                             <div style="display: flex; justify-content: space-between;">
-                                <span style="font-weight: bold;">ID Ordine:</span>
+                                <span style="font-weight: bold;">ID Ordine: </span>
                                 <span>${orderId}</span>
                             </div>
                         </div>
@@ -97,10 +97,9 @@ export class EmailService {
                         <div style="margin-bottom: 30px;">
                             <h2 style="color: #2D3748; margin-bottom: 15px;">Cosa succede ora?</h2>
                             <ul style="color: #4A5568; line-height: 1.6;">
-                                <li>📧 Riceverai le tue credenziali di accesso via email entro 24 ore</li>
-                                <li>📱 Potrai accedere alla piattaforma e iniziare il tuo percorso</li>
-                                <li>💬 Il tuo coach personale ti contatterà per il primo colloquio</li>
-                                <li>📋 Riceverai il tuo piano di allenamento personalizzato</li>
+                                <li>📧 Riceverai una mail per attivare il tuo account entro pochi minuti</li>
+                                <li>📱 Dopo aver attivato il tuo account potrai prenotare la prima call con Petra!</li>
+                                <li>💬 In seguito alla call la tua coach preparerà un piano personalizzato e ti darà accesso all'app</li>
                             </ul>
                         </div>
                         

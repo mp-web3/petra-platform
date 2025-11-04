@@ -59,7 +59,7 @@ export default function TermsOfServiceDialog({
     return (
         <Dialog.Root
             onOpenChange={(e) => setOpen(e.open)}
-            size={{ base: 'full', md: 'cover' }}
+            size={{ base: 'full', md: 'xl' }}
             open={open}
             scrollBehavior="inside"
         >
@@ -68,14 +68,14 @@ export default function TermsOfServiceDialog({
             </Dialog.Trigger>
             <Dialog.Backdrop />
             <Dialog.Positioner>
-                <Dialog.Content>
+                <Dialog.Content maxH="90vh" w={{ base: '100%', md: '90%', lg: '800px' }}>
                     <Dialog.Header>
                         <Dialog.Title>Termini di servizio e trattamento dei dati</Dialog.Title>
                     </Dialog.Header>
                     <Dialog.CloseTrigger asChild>
                         <CloseButton size="sm" />
                     </Dialog.CloseTrigger>
-                    <Dialog.Body display="flex" flexDirection="column" h="calc(100vh - 160px)">
+                    <Dialog.Body display="flex" flexDirection="column" maxH="calc(90vh - 120px)" overflow="hidden">
                         {loading ? (
                             <Box display="flex" alignItems="center" justifyContent="center" flex="1">
                                 <Spinner />
