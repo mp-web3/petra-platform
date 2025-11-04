@@ -10,6 +10,18 @@ export interface ActivateAccountDto {
     userId: string;
     password: string;
     name?: string;
+    'h-captcha-response': string;
+}
+
+export interface ResendActivationDto {
+    email: string;
+    'h-captcha-response': string;
+}
+
+export interface ResendActivationResponse {
+    success: boolean;
+    message: string;
+    emailLogId?: string;
 }
 
 export interface LoginResponse {
@@ -40,19 +52,19 @@ export interface ActivateAccountResponse {
 }
 
 export class AuthApi {
-    constructor(private client: ApiClient) {}
+    constructor(private client: ApiClient) { }
 
     /**
      * Login with email and password
      */
     async login(dto: LoginDto): Promise<LoginResponse> {
         const response = await this.client.post<LoginResponse>('/api/auth/login', dto);
-        
+
         // Automatically store token
         if (response.access_token) {
             this.client.setAuthToken(response.access_token);
         }
-        
+
         return response;
     }
 
@@ -61,6 +73,13 @@ export class AuthApi {
      */
     async activateAccount(dto: ActivateAccountDto): Promise<ActivateAccountResponse> {
         return this.client.post<ActivateAccountResponse>('/api/auth/activate', dto);
+    }
+
+    /**
+     * Resend activation email
+     */
+    async resendActivation(dto: ResendActivationDto): Promise<ResendActivationResponse> {
+        return this.client.post<ResendActivationResponse>('/api/auth/resend-activation', dto);
     }
 
     /**

@@ -179,7 +179,9 @@ export class EmailService {
         });
 
         try {
-            const activationUrl = `${this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3000'}/activate?token=${activationToken}&userId=${userId}`;
+            // Include email in URL for better UX (pre-fills resend form if token expires)
+            const emailParam = email ? `&email=${encodeURIComponent(email)}` : '';
+            const activationUrl = `${this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3000'}/activate?token=${activationToken}&userId=${userId}${emailParam}`;
 
             const result = await this.resend.emails.send({
                 from: 'Petra Coaching <noreply@coachingpetra.com>',
