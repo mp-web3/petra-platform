@@ -33,7 +33,9 @@ function ActivateContent() {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [name, setName] = useState('');
-    const [passwordError, setPasswordError] = useState<string | null>(null);
+    const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [captchaToken, setCaptchaToken] = useState<string | null>(null);
     const [captchaError, setCaptchaError] = useState<string | null>(null);
 
@@ -50,16 +52,79 @@ function ActivateContent() {
             setError('Link di attivazione non valido. Mancano token o ID utente.');
             return;
         }
-        setState('form');
+
+        // Validate token on page load
+        const validateToken = async () => {
+            setLoading(true);
+            try {
+                const apiClient = createApiClient(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001');
+                const result = await apiClient.auth.validateToken(token!, userId!);
+
+                if (!result.valid) {
+                    if (result.expired) {
+                        setState('expired');
+                    } else {
+                        setState('error');
+                        setError(result.message || 'Token non valido');
+                    }
+                } else {
+                    // Token is valid, show password form
+                    setState('form');
+                }
+            } catch (err: any) {
+                console.error('Token validation error:', err);
+                setState('error');
+                setError('Errore durante la validazione del token. Riprova più tardi.');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        validateToken();
     }, [token, userId]);
 
-    const validatePassword = (pwd: string): string | null => {
-        if (!pwd) return 'Password richiesta';
-        if (pwd.length < 8) return 'La password deve essere di almeno 8 caratteri';
-        if (!/(?=.*[a-z])/.test(pwd)) return 'La password deve contenere almeno una lettera minuscola';
-        if (!/(?=.*[A-Z])/.test(pwd)) return 'La password deve contenere almeno una lettera maiuscola';
-        if (!/(?=.*\d)/.test(pwd)) return 'La password deve contenere almeno un numero';
-        return null;
+    // Password validation following best practices
+    const validatePassword = (pwd: string): { valid: boolean; errors: string[] } => {
+        const errors: string[] = [];
+
+        if (!pwd) {
+            return { valid: false, errors: ['Password richiesta'] };
+        }
+
+        if (pwd.length < 8) {
+            errors.push('Almeno 8 caratteri');
+        }
+        if (!/(?=.*[a-z])/.test(pwd)) {
+            errors.push('Una lettera minuscola');
+        }
+        if (!/(?=.*[A-Z])/.test(pwd)) {
+            errors.push('Una lettera maiuscola');
+        }
+        if (!/(?=.*\d)/.test(pwd)) {
+            errors.push('Un numero');
+        }
+        if (!/(?=.*[@$!%*?&#])/.test(pwd)) {
+            errors.push('Un carattere speciale (@$!%*?&#)');
+        }
+
+        return { valid: errors.length === 0, errors };
+    };
+
+    // Calculate password strength
+    const getPasswordStrength = (pwd: string): { strength: 'weak' | 'medium' | 'strong'; score: number } => {
+        if (!pwd) return { strength: 'weak', score: 0 };
+
+        let score = 0;
+        if (pwd.length >= 8) score++;
+        if (pwd.length >= 12) score++;
+        if (/(?=.*[a-z])/.test(pwd)) score++;
+        if (/(?=.*[A-Z])/.test(pwd)) score++;
+        if (/(?=.*\d)/.test(pwd)) score++;
+        if (/(?=.*[@$!%*?&#])/.test(pwd)) score++;
+
+        if (score <= 2) return { strength: 'weak', score };
+        if (score <= 4) return { strength: 'medium', score };
+        return { strength: 'strong', score };
     };
 
     const handleActivate = async () => {
@@ -69,14 +134,14 @@ function ActivateContent() {
         }
 
         // Validate password
-        const pwdError = validatePassword(password);
-        if (pwdError) {
-            setPasswordError(pwdError);
+        const pwdValidation = validatePassword(password);
+        if (!pwdValidation.valid) {
+            setPasswordErrors(pwdValidation.errors);
             return;
         }
 
         if (password !== confirmPassword) {
-            setPasswordError('Le password non corrispondono');
+            setPasswordErrors(['Le password non corrispondono']);
             return;
         }
 
@@ -87,7 +152,7 @@ function ActivateContent() {
 
         setLoading(true);
         setError(null);
-        setPasswordError(null);
+        setPasswordErrors([]);
         setCaptchaError(null);
 
         try {
@@ -235,7 +300,10 @@ function ActivateContent() {
                                     ⚠️ Il link di attivazione è scaduto
                                 </Text>
                                 <Text fontSize="sm" color="text.onPage">
-                                    Il link di attivazione è valido per 24 ore. Richiedi un nuovo link per attivare il tuo account.
+                                    Clicca sul pulsante qui sotto per ricevere un nuovo link di attivazione.
+                                </Text>
+                                <Text fontSize="xs" color="text.muted" mt={2}>
+                                    ⏰ Il link di attivazione scade dopo 24 ore dalla ricezione.
                                 </Text>
                             </VStack>
                         </Box>
@@ -389,22 +457,103 @@ function ActivateContent() {
                                 <Text fontSize="sm" fontWeight="semibold" color="text.onPage">
                                     Password
                                 </Text>
-                                <Input
-                                    type="password"
-                                    placeholder="Almeno 8 caratteri, una maiuscola, una minuscola e un numero"
-                                    value={password}
-                                    onChange={(e) => {
-                                        setPassword(e.target.value);
-                                        setPasswordError(null);
-                                    }}
-                                    disabled={loading}
-                                    w="full"
-                                    borderColor={passwordError ? "status.error" : undefined}
-                                />
-                                {passwordError && (
-                                    <Text fontSize="xs" color="status.error">
-                                        {passwordError}
-                                    </Text>
+                                <HStack w="full" gap={2}>
+                                    <Input
+                                        type={showPassword ? "text" : "password"}
+                                        placeholder="Crea una password sicura"
+                                        value={password}
+                                        onChange={(e) => {
+                                            setPassword(e.target.value);
+                                            setPasswordErrors([]);
+                                        }}
+                                        disabled={loading}
+                                        flex={1}
+                                        borderColor={passwordErrors.length > 0 ? "status.error" : undefined}
+                                    />
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        aria-label={showPassword ? "Nascondi password" : "Mostra password"}
+                                    >
+                                        {showPassword ? "👁️" : "👁️‍🗨️"}
+                                    </Button>
+                                </HStack>
+
+                                {/* Password strength indicator */}
+                                {password && (
+                                    <Box w="full">
+                                        <HStack gap={1} mb={2}>
+                                            {[1, 2, 3].map((i) => {
+                                                const strength = getPasswordStrength(password);
+                                                const filled = strength.strength === 'strong' ? 3 : strength.strength === 'medium' ? 2 : 1;
+                                                return (
+                                                    <Box
+                                                        key={i}
+                                                        h="4px"
+                                                        flex={1}
+                                                        bg={i <= filled
+                                                            ? strength.strength === 'strong' ? 'status.success'
+                                                                : strength.strength === 'medium' ? 'status.warning'
+                                                                    : 'status.error'
+                                                            : 'border.subtle'
+                                                        }
+                                                        borderRadius="sm"
+                                                    />
+                                                );
+                                            })}
+                                        </HStack>
+                                        <Text fontSize="xs" color={
+                                            getPasswordStrength(password).strength === 'strong' ? 'status.success' :
+                                                getPasswordStrength(password).strength === 'medium' ? 'status.warning' :
+                                                    'status.error'
+                                        }>
+                                            Forza: {
+                                                getPasswordStrength(password).strength === 'strong' ? 'Forte' :
+                                                    getPasswordStrength(password).strength === 'medium' ? 'Media' :
+                                                        'Debole'
+                                            }
+                                        </Text>
+                                    </Box>
+                                )}
+
+                                {/* Password requirements */}
+                                {password && (
+                                    <Box w="full" bg="neutralLight.light" p={3} borderRadius="md">
+                                        <Text fontSize="xs" fontWeight="semibold" color="text.onPage" mb={2}>
+                                            Requisiti password:
+                                        </Text>
+                                        <VStack align="flex-start" gap={1}>
+                                            {[
+                                                { check: password.length >= 8, label: 'Almeno 8 caratteri' },
+                                                { check: /(?=.*[a-z])/.test(password), label: 'Una lettera minuscola' },
+                                                { check: /(?=.*[A-Z])/.test(password), label: 'Una lettera maiuscola' },
+                                                { check: /(?=.*\d)/.test(password), label: 'Un numero' },
+                                                { check: /(?=.*[@$!%*?&#])/.test(password), label: 'Un carattere speciale (@$!%*?&#)' },
+                                            ].map((req, idx) => (
+                                                <HStack key={idx} gap={2}>
+                                                    <Text fontSize="xs" color={req.check ? 'status.success' : 'text.muted'}>
+                                                        {req.check ? '✓' : '○'}
+                                                    </Text>
+                                                    <Text fontSize="xs" color={req.check ? 'status.success' : 'text.muted'}>
+                                                        {req.label}
+                                                    </Text>
+                                                </HStack>
+                                            ))}
+                                        </VStack>
+                                    </Box>
+                                )}
+
+                                {passwordErrors.length > 0 && (
+                                    <Box w="full" bg="status.errorLight" p={3} borderRadius="md">
+                                        <VStack align="flex-start" gap={1}>
+                                            {passwordErrors.map((err, idx) => (
+                                                <Text key={idx} fontSize="xs" color="status.error">
+                                                    • {err}
+                                                </Text>
+                                            ))}
+                                        </VStack>
+                                    </Box>
                                 )}
                             </VStack>
 
@@ -412,17 +561,35 @@ function ActivateContent() {
                                 <Text fontSize="sm" fontWeight="semibold" color="text.onPage">
                                     Conferma Password
                                 </Text>
-                                <Input
-                                    type="password"
-                                    placeholder="Ripeti la password"
-                                    value={confirmPassword}
-                                    onChange={(e) => {
-                                        setConfirmPassword(e.target.value);
-                                        setPasswordError(null);
-                                    }}
-                                    disabled={loading}
-                                    w="full"
-                                />
+                                <HStack w="full" gap={2}>
+                                    <Input
+                                        type={showConfirmPassword ? "text" : "password"}
+                                        placeholder="Ripeti la password"
+                                        value={confirmPassword}
+                                        onChange={(e) => {
+                                            setConfirmPassword(e.target.value);
+                                            setPasswordErrors([]);
+                                        }}
+                                        disabled={loading}
+                                        flex={1}
+                                        borderColor={
+                                            confirmPassword && password !== confirmPassword ? "status.error" : undefined
+                                        }
+                                    />
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                        aria-label={showConfirmPassword ? "Nascondi password" : "Mostra password"}
+                                    >
+                                        {showConfirmPassword ? "👁️" : "👁️‍🗨️"}
+                                    </Button>
+                                </HStack>
+                                {confirmPassword && password !== confirmPassword && (
+                                    <Text fontSize="xs" color="status.error">
+                                        Le password non corrispondono
+                                    </Text>
+                                )}
                             </VStack>
 
                             {captchaError && (
@@ -454,7 +621,14 @@ function ActivateContent() {
                                 size="lg"
                                 w="full"
                                 onClick={handleActivate}
-                                disabled={loading || !captchaToken || !password || !confirmPassword}
+                                disabled={
+                                    loading ||
+                                    !captchaToken ||
+                                    !password ||
+                                    !confirmPassword ||
+                                    password !== confirmPassword ||
+                                    !validatePassword(password).valid
+                                }
                             >
                                 {loading ? 'Attivazione in corso...' : 'Attiva Account'}
                             </Button>

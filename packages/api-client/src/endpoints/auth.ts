@@ -24,6 +24,12 @@ export interface ResendActivationResponse {
     emailLogId?: string;
 }
 
+export interface ValidateTokenResponse {
+    valid: boolean;
+    expired?: boolean;
+    message: string;
+}
+
 export interface LoginResponse {
     success: boolean;
     message: string;
@@ -66,6 +72,15 @@ export class AuthApi {
         }
 
         return response;
+    }
+
+    /**
+     * Validate activation token (without activating)
+     */
+    async validateToken(token: string, userId: string): Promise<ValidateTokenResponse> {
+        return this.client.get<ValidateTokenResponse>('/api/auth/validate-token', {
+            params: { token, userId },
+        });
     }
 
     /**

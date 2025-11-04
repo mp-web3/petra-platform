@@ -1,8 +1,9 @@
-import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Get, Body, Query, HttpCode, HttpStatus } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ActivateAccountDto } from './dto/activate-account.dto';
 import { ResendActivationDto } from './dto/resend-activation.dto';
 import { LoginDto } from './dto/login.dto';
+import { ValidateTokenDto } from './dto/validate-token.dto';
 import { Throttle } from '@nestjs/throttler';
 import { THROTTLE_CONFIG } from '../throttle.constants';
 import { VerifyCaptcha } from '@gvrs/nestjs-hcaptcha';
@@ -10,6 +11,36 @@ import { VerifyCaptcha } from '@gvrs/nestjs-hcaptcha';
 @Controller('api/auth')
 export class AuthController {
     constructor(private readonly authService: AuthService) { }
+
+    /**
+     * GET /api/auth/validate-token
+     * 
+     * Validates an activation token without activating the account.
+     * Used by frontend to check token validity on page load.
+     * 
+     * @param token - Activation token
+     * @param userId - User ID
+     * @returns Token validation result
+     */
+    @Get('validate-token')
+    @HttpCode(HttpStatus.OK)
+    @Throttle({ default: THROTTLE_CONFIG.auth.activate })
+    async validateToken(@Query() dto: ValidateTokenDto) {
+        try {
+            await this.authService.validateActivationToken(dto.token, dto.userId);
+            return {
+                valid: true,
+                message: 'Token is valid',
+            };
+        } catch (error: any) {
+            const isExpired = error.message?.includes('expired') || error.message?.includes('scaduto');
+            return {
+                valid: false,
+                expired: isExpired,
+                message: error.message || 'Invalid token',
+            };
+        }
+    }
 
     /**
      * POST /api/auth/activate
