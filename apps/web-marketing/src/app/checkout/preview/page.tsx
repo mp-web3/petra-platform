@@ -8,6 +8,7 @@ import type { UiPlan } from '@/lib/plans';
 import { createApiClient } from '@petra/api-client';
 import Link from 'next/link';
 import { TermsOfServiceDialog } from '@/components';
+import { HCaptchaWidget } from '@/components/HCaptcha';
 
 function PreviewOrderContent() {
   const searchParams = useSearchParams();
@@ -22,6 +23,8 @@ function PreviewOrderContent() {
   const [marketingOptIn, setMarketingOptIn] = useState(false);
   const [emailError, setEmailError] = useState<string | null>(null);
   const [showTosHelp, setShowTosHelp] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [captchaError, setCaptchaError] = useState<string | null>(null);
 
   useEffect(() => {
     if (planSlug) {
@@ -56,6 +59,11 @@ function PreviewOrderContent() {
       return;
     }
 
+    if (!captchaToken) {
+      setError('Completa la verifica CAPTCHA per procedere');
+      return;
+    }
+
     setLoading(true);
     setError(null);
     setEmailError(null);
@@ -80,6 +88,7 @@ function PreviewOrderContent() {
         acceptedPrivacy: true,
         disclosurePrivacyVersion: privacyVersion || 'v1.0',
         marketingOptIn,
+        'h-captcha-response': captchaToken! // Non-null assertion: validated above
       });
 
       if (result.url) {
@@ -88,6 +97,7 @@ function PreviewOrderContent() {
     } catch (err) {
       console.error('Checkout error:', err);
       setError('Si è verificato un errore. Riprova più tardi.');
+      setCaptchaToken(null); // Reset CAPTCHA on error so user can try again
       setLoading(false);
     }
   };
@@ -307,6 +317,40 @@ function PreviewOrderContent() {
             </VStack>
           </Box>
 
+          {/* Add CAPTCHA widget here */}
+          <Box
+            w="full"
+            bg="neutralLight.default"
+            p={4}
+            borderRadius="md"
+            border="1px solid"
+            borderColor={captchaError ? "status.error" : "border.subtle"}
+          >
+            <VStack align="flex-start" gap={2}>
+              <Text fontSize="sm" fontWeight="semibold" color="text.onPage">
+                Verifica di sicurezza
+              </Text>
+              <Text fontSize="xs" color="text.muted">
+                Completa la verifica per procedere con il pagamento
+              </Text>
+              <HCaptchaWidget
+                onVerify={(token) => {
+                  setCaptchaToken(token);
+                  setCaptchaError(null);
+                }}
+                onError={() => {
+                  setCaptchaToken(null);
+                  setCaptchaError('Verifica CAPTCHA fallita. Riprova.');
+                }}
+              />
+              {captchaError && (
+                <Text fontSize="sm" color="status.error">
+                  {captchaError}
+                </Text>
+              )}
+            </VStack>
+          </Box>
+
           <HStack gap={4} w="full">
             <Button asChild variant="outline" flex={1}>
               <Link href="/coaching-donna-online#piani">Cambia Piano</Link>
@@ -314,7 +358,7 @@ function PreviewOrderContent() {
             <Button
               onClick={handleCheckout}
               loading={loading}
-              disabled={!acceptedTos || !email || loading}
+              disabled={!acceptedTos || !email || !captchaToken || loading}
               bg="surface.action"
               color="text.onSurfaceAction"
               _hover={{ bg: 'interactive.primaryHover' }}

@@ -1,4 +1,4 @@
-import { IsEmail, IsBoolean, IsString, MinLength, IsOptional } from 'class-validator';
+import { IsEmail, IsBoolean, IsString, MinLength, IsOptional, IsNotEmpty } from 'class-validator';
 
 export class CreateCheckoutSessionDto {
     @IsString()
@@ -25,5 +25,9 @@ export class CreateCheckoutSessionDto {
     @IsBoolean()
     @IsOptional()
     marketingOptIn?: boolean;
+
+    @IsString()
+    @IsNotEmpty()
+    'h-captcha-response': string;
 }
 

@@ -6,6 +6,7 @@ export interface CreateCheckoutSessionDto {
     marketingOptIn?: boolean;
     disclosureTosVersion: string;
     disclosurePrivacyVersion: string;
+    'h-captcha-response': string;
 }
 
 export interface CheckoutSessionResponse {

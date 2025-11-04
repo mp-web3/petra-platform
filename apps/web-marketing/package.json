@@ -12,6 +12,7 @@
   "dependencies": {
     "@chakra-ui/react": "^3.26.0",
     "@emotion/react": "^11.14.0",
+    "@hcaptcha/react-hcaptcha": "^1.14.0",
     "@petra/api-client": "workspace:*",
     "@petra/types": "workspace:*",
     "@petra/utils": "workspace:*",
@@ -33,4 +34,3 @@
     "typescript": "^5.8.3"
   }
 }
-

@@ -2,12 +2,15 @@
     "extends": "@petra/config/typescript/base.json",
     "compilerOptions": {
         "outDir": "./dist",
-        "rootDir": "./src",
         "declaration": true,
         "declarationMap": true,
+        "lib": [
+            "ES2022",
+            "DOM"
+        ],
         "paths": {
             "@petra/types": [
-                "../../packages/types/src"
+                "../../types/src"
             ]
         }
     },
