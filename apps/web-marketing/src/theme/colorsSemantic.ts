@@ -59,7 +59,7 @@ export const semanticTokens = {
         },
 
         hoverlay: {
-            default: { value: '{colors.blackAlpha.500}' }
+            default: { value: '{colors.blackAlpha.700}' }
         },
 
         // Border Colors - Different border contexts

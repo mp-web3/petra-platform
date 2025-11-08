@@ -1,6 +1,71 @@
-# Rate Limiting Test Scripts
+# Scripts
 
-This directory contains scripts for testing rate limiting functionality.
+This directory contains utility scripts for the API.
+
+## Database Cleanup
+
+### TypeScript Script (Recommended)
+
+Clean all records from the database using Prisma:
+
+```bash
+# Run the cleanup script
+pnpm db:clean
+```
+
+Or directly:
+```bash
+# Using ts-node (already installed)
+pnpm ts-node -r tsconfig-paths/register scripts/clean-database.ts
+
+# Or using tsx (if installed)
+pnpm tsx scripts/clean-database.ts
+```
+
+### SQL Script (Alternative)
+
+Clean all records using raw SQL:
+
+```bash
+# Using psql
+psql $DATABASE_URL -f scripts/clean-database.sql
+
+# Or using Prisma
+npx prisma db execute --file scripts/clean-database.sql --schema prisma/schema.prisma
+```
+
+### Prisma Studio (Manual)
+
+For selective deletion:
+
+```bash
+pnpm prisma:studio
+```
+
+Then manually delete records from the UI.
+
+### ⚠️ WARNING
+
+**These scripts will DELETE ALL DATA from the database!**
+- Only use in **development/testing** environments
+- **Never run in production**
+- Make sure you have backups if needed
+- The cleanup respects foreign key constraints and deletes in the correct order
+
+### Deletion Order
+
+The scripts delete records in this order to respect foreign key constraints:
+1. EmailLogs
+2. ActivationTokens
+3. Consents
+4. Orders
+5. Subscriptions
+6. Users
+7. PlanCatalog
+
+---
+
+## Rate Limiting Test Scripts
 
 ## Test Script Usage
 

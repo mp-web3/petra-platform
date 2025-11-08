@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
     Box,
@@ -16,7 +16,7 @@ import {
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 
-export default function LoginPage() {
+function LoginContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const { login, isAuthenticated, loading: authLoading } = useAuth();
@@ -167,6 +167,24 @@ export default function LoginPage() {
                 </VStack>
             </Container>
         </Box>
+    );
+}
+
+export default function LoginPage() {
+    return (
+        <Suspense
+            fallback={
+                <Box pt={20} minH="100vh" bg="surface.page">
+                    <Container maxW="container.md" px={[4, 6, 8]} py={[16, 20, 24]}>
+                        <VStack gap={4} textAlign="center">
+                            <Text>Caricamento...</Text>
+                        </VStack>
+                    </Container>
+                </Box>
+            }
+        >
+            <LoginContent />
+        </Suspense>
     );
 }
 

@@ -92,7 +92,7 @@ export default function HomePage() {
           left={0}
           right={0}
           bottom={0}
-          backgroundImage="url(/images/fitness-coach-barbell-row.webp)"
+          backgroundImage="url(/images/weights-background.jpg)"
           backgroundSize="cover"
           backgroundPosition="center"
           backgroundRepeat="no-repeat"
@@ -152,7 +152,7 @@ Per me, l'obiettivo è costruire insieme un cambiamento duraturo, porsi nuove sf
             </VStack>
 
             <ChakraImage
-              src="/images/fitness-coach-barbell-row-vertical.webp"
+              src="/images/coach-benchpress.jpg"
               alt="Fitness strength performance"
               aspectRatio="1/1"
             />

@@ -59,7 +59,7 @@ export default function TermsOfServiceDialog({
     return (
         <Dialog.Root
             onOpenChange={(e) => setOpen(e.open)}
-            size={{ base: 'full', md: 'xl' }}
+            size={{ base: 'cover', md: 'full' }}
             open={open}
             scrollBehavior="inside"
         >
