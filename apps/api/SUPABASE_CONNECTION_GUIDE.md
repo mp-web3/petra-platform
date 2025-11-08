@@ -77,8 +77,8 @@ In `apps/api/.env`, set your `DATABASE_URL`:
 **Use Direct Connection** (most reliable with Prisma):
 
 ```env
-# Direct connection - most reliable for Prisma
-DATABASE_URL="postgresql://prisma:[PRISMA-PASSWORD]@db.[PROJECT-REF].supabase.co:5432/postgres"
+# Direct connection with SSL (Recommended for Production)
+DATABASE_URL="postgresql://prisma:[PRISMA-PASSWORD]@db.[PROJECT-REF].supabase.co:5432/postgres?sslmode=require"
 ```
 
 **Replace:**
@@ -87,8 +87,18 @@ DATABASE_URL="postgresql://prisma:[PRISMA-PASSWORD]@db.[PROJECT-REF].supabase.co
 
 **Example:**
 ```env
+# Production (with SSL - recommended)
+DATABASE_URL="postgresql://prisma:your_prisma_password@db.iglnqcndfzktzaqdtumv.supabase.co:5432/postgres?sslmode=require"
+
+# Development (without SSL - only if you have connection issues)
 DATABASE_URL="postgresql://prisma:your_prisma_password@db.iglnqcndfzktzaqdtumv.supabase.co:5432/postgres"
 ```
+
+**SSL Configuration:**
+- ✅ **Always use `?sslmode=require` in production** - encrypts data in transit
+- ✅ Protects sensitive user data, payment information, and credentials
+- ✅ Required for GDPR and PCI-DSS compliance
+- 🟡 Can optionally skip in local development if needed
 
 ### Alternative: Connection Pooler (if direct connection doesn't work)
 
