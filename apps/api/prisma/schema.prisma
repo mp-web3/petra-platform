@@ -1,184 +1,180 @@
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
-}
-
-enum UserRole {
-    CLIENT
-    COACH
-    ADMIN
-}
-
-enum SubscriptionStatus {
-    ACTIVE
-    CANCELLED
-    PAST_DUE
-    TRIALING
-    INCOMPLETE
-}
-
-enum SubscriptionPlanType {
-    WOMAN_STARTER
-    WOMAN_PREMIUM
-    MAN_STARTER
-    MAN_PREMIUM
-}
-
-enum PlanDuration {
-    WEEKS_6  @map("6W")
-    WEEKS_18 @map("18W")
-    WEEKS_36 @map("36W")
-}
-
-enum OrderStatus {
-    PENDING
-    COMPLETED
-    FAILED
-    REFUNDED
-}
-
-enum SignUpStatus {
-    PENDING // Order completed, activation email sent, waiting for password setup
-    ACTIVATED // User has set password and account is fully active
-    EXPIRED // Activation link/token expired (optional, for tracking)
-}
-
-enum EmailType {
-    TRANSACTIONAL
-    MARKETING
-    SIGNUP
-    PASSWORD_RESET
-    WELCOME
-}
-
-enum EmailStatus {
-    SENT
-    FAILED
-    DELIVERED
-    OPENED
-    BOUNCED
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model EmailLog {
-    id        String    @id @default(cuid())
-    emailType EmailType
-    orderId   String?   @map("order_id")
-    order     Order?    @relation(fields: [orderId], references: [id])
-    campaign  String?   @map("campaign")
+  id             String      @id @default(cuid())
+  emailType      EmailType
+  orderId        String?     @map("order_id")
+  campaign       String?     @map("campaign")
+  recipientEmail String      @map("recipient_email")
+  status         EmailStatus
+  providerId     String?     @map("provider_id")
+  errorMessage   String?     @map("error_message")
+  sentAt         DateTime    @default(now()) @map("sent_at")
+  deliveredAt    DateTime?   @map("delivered_at")
+  openedAt       DateTime?   @map("opened_at")
+  order          Order?      @relation(fields: [orderId], references: [id])
 
-    recipientEmail String      @map("recipient_email")
-    status         EmailStatus
-    providerId     String?     @map("provider_id")
-    errorMessage   String?     @map("error_message")
-
-    sentAt      DateTime  @default(now()) @map("sent_at")
-    deliveredAt DateTime? @map("delivered_at")
-    openedAt    DateTime? @map("opened_at")
-
-    @@map("email_logs")
+  @@map("email_logs")
 }
 
 model User {
-    id               String            @id @default(cuid())
-    email            String            @unique
-    name             String?
-    password         String? // Nullable - set during activation
-    role             UserRole          @default(CLIENT)
-    stripeCustomerId String?           @unique @map("stripe_customer_id")
-    orders           Order[]
-    subscriptions    Subscription[]
-    activationTokens ActivationToken[]
-    createdAt        DateTime          @default(now()) @map("created_at")
-    updatedAt        DateTime          @updatedAt @map("updated_at")
+  id                     String            @id @default(cuid())
+  email                  String            @unique
+  name                   String?
+  role                   UserRole          @default(CLIENT)
+  stripeCustomerId       String?           @unique @map("stripe_customer_id")
+  createdAt              DateTime          @default(now()) @map("created_at")
+  updatedAt              DateTime          @updatedAt @map("updated_at")
+  activatedAt            DateTime?         @map("activated_at")
+  activationReminderSent Boolean           @default(false)
+  emailVerified          Boolean           @default(false)
+  password               String?
+  activationTokens       ActivationToken[]
+  orders                 Order[]
+  subscriptions          Subscription[]
 
-    // Activation tracking
-    emailVerified          Boolean   @default(false)
-    activationReminderSent Boolean   @default(false)
-    activatedAt            DateTime? @map("activated_at")
-
-    @@map("users")
+  @@map("users")
 }
 
 model Order {
-    id                    String       @id @default(cuid())
-    user                  User?        @relation(fields: [userId], references: [id])
-    userId                String?      @map("user_id")
-    planId                String       @map("plan_id")
-    amount                Int
-    currency              String
-    status                OrderStatus
-    stripeSessionId       String       @unique @map("stripe_session_id")
-    stripePaymentIntentId String?      @unique @map("stripe_payment_intent_id")
-    consent               Consent?
-    signUpStatus          SignUpStatus @default(PENDING) @map("sign_up_status")
-    createdAt             DateTime     @default(now()) @map("created_at")
-    updatedAt             DateTime     @updatedAt @map("updated_at")
-    emailLogs             EmailLog[]
+  id                    String       @id @default(cuid())
+  userId                String?      @map("user_id")
+  planId                String       @map("plan_id")
+  amount                Int
+  currency              String
+  status                OrderStatus
+  stripeSessionId       String       @unique @map("stripe_session_id")
+  stripePaymentIntentId String?      @unique @map("stripe_payment_intent_id")
+  createdAt             DateTime     @default(now()) @map("created_at")
+  updatedAt             DateTime     @updatedAt @map("updated_at")
+  signUpStatus          SignUpStatus @default(PENDING) @map("sign_up_status")
+  consent               Consent?
+  emailLogs             EmailLog[]
+  user                  User?        @relation(fields: [userId], references: [id])
 
-    @@map("orders")
+  @@map("orders")
 }
 
 model Consent {
-    id                       String   @id @default(cuid())
-    order                    Order    @relation(fields: [orderId], references: [id])
-    orderId                  String   @unique @map("order_id")
-    tosAccepted              Boolean  @map("tos_accepted")
-    privacyAccepted          Boolean  @default(true) @map("privacy_accepted")
-    marketingOptIn           Boolean? @map("marketing_opt_in")
-    disclosureTosVersion     String   @map("disclosure_tos_version")
-    disclosurePrivacyVersion String   @default("v1.0") @map("disclosure_privacy_version")
-    ipAddress                String?  @map("ip_address")
-    userAgent                String?  @map("user_agent")
-    createdAt                DateTime @default(now()) @map("created_at")
+  id                       String   @id @default(cuid())
+  orderId                  String   @unique @map("order_id")
+  tosAccepted              Boolean  @map("tos_accepted")
+  marketingOptIn           Boolean? @map("marketing_opt_in")
+  ipAddress                String?  @map("ip_address")
+  userAgent                String?  @map("user_agent")
+  createdAt                DateTime @default(now()) @map("created_at")
+  disclosurePrivacyVersion String   @default("v1.0") @map("disclosure_privacy_version")
+  disclosureTosVersion     String   @map("disclosure_tos_version")
+  privacyAccepted          Boolean  @default(true) @map("privacy_accepted")
+  order                    Order    @relation(fields: [orderId], references: [id])
 
-    @@map("consents")
+  @@map("consents")
 }
 
 model Subscription {
-    id                   String               @id @default(cuid())
-    user                 User                 @relation(fields: [userId], references: [id])
-    userId               String               @map("user_id")
-    planType             SubscriptionPlanType @map("plan_type")
-    duration             PlanDuration
-    status               SubscriptionStatus
-    stripeSubscriptionId String               @unique @map("stripe_subscription_id")
-    currentPeriodStart   DateTime             @map("current_period_start")
-    currentPeriodEnd     DateTime             @map("current_period_end")
-    cancelAtPeriodEnd    Boolean              @default(false) @map("cancel_at_period_end")
-    createdAt            DateTime             @default(now()) @map("created_at")
-    updatedAt            DateTime             @updatedAt @map("updated_at")
+  id                   String               @id @default(cuid())
+  userId               String               @map("user_id")
+  planType             SubscriptionPlanType @map("plan_type")
+  duration             PlanDuration
+  status               SubscriptionStatus
+  stripeSubscriptionId String               @unique @map("stripe_subscription_id")
+  currentPeriodStart   DateTime             @map("current_period_start")
+  currentPeriodEnd     DateTime             @map("current_period_end")
+  cancelAtPeriodEnd    Boolean              @default(false) @map("cancel_at_period_end")
+  createdAt            DateTime             @default(now()) @map("created_at")
+  updatedAt            DateTime             @updatedAt @map("updated_at")
+  user                 User                 @relation(fields: [userId], references: [id])
 
-    @@map("subscriptions")
+  @@map("subscriptions")
 }
 
 model PlanCatalog {
-    id            String               @id
-    title         String
-    subtitle      String
-    priceLabel    String               @map("price_label")
-    stripePriceId String               @map("stripe_price_id")
-    planType      SubscriptionPlanType @map("plan_type")
-    duration      PlanDuration
-    active        Boolean              @default(true)
+  id            String               @id
+  title         String
+  subtitle      String
+  priceLabel    String               @map("price_label")
+  stripePriceId String               @map("stripe_price_id")
+  planType      SubscriptionPlanType @map("plan_type")
+  duration      PlanDuration
+  active        Boolean              @default(true)
 
-    @@map("plan_catalog")
+  @@map("plan_catalog")
 }
 
 model ActivationToken {
-    id        String    @id @default(cuid())
-    tokenHash String    @unique @map("token_hash") // Hashed token (bcrypt)
-    user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-    userId    String    @map("user_id")
-    expiresAt DateTime  @map("expires_at")
-    usedAt    DateTime? @map("used_at") // Track when token was used
-    createdAt DateTime  @default(now()) @map("created_at")
+  id        String    @id @default(cuid())
+  userId    String    @map("user_id")
+  expiresAt DateTime  @map("expires_at")
+  usedAt    DateTime? @map("used_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+  tokenHash String    @unique @map("token_hash")
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@index([tokenHash]) // Fast lookup by token hash
-    @@index([userId]) // Fast lookup by user
-    @@index([expiresAt]) // For cleanup of expired tokens
-    @@map("activation_tokens")
+  @@index([tokenHash])
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("activation_tokens")
+}
+
+enum UserRole {
+  CLIENT
+  COACH
+  ADMIN
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELLED
+  PAST_DUE
+  TRIALING
+  INCOMPLETE
+}
+
+enum SubscriptionPlanType {
+  WOMAN_STARTER
+  WOMAN_PREMIUM
+  MAN_STARTER
+  MAN_PREMIUM
+}
+
+enum PlanDuration {
+  WEEKS_6  @map("6W")
+  WEEKS_18 @map("18W")
+  WEEKS_36 @map("36W")
+}
+
+enum OrderStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum SignUpStatus {
+  PENDING
+  ACTIVATED
+  EXPIRED
+}
+
+enum EmailType {
+  TRANSACTIONAL
+  MARKETING
+  SIGNUP
+  PASSWORD_RESET
+  WELCOME
+}
+
+enum EmailStatus {
+  SENT
+  FAILED
+  DELIVERED
+  OPENED
+  BOUNCED
 }
