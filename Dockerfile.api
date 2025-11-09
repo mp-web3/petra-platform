@@ -9,6 +9,10 @@ WORKDIR /app
 # Dependencies stage
 FROM base AS dependencies
 COPY package.json pnpm-workspace.yaml pnpm-lock.yaml* ./
+
+# Debug: List files to verify pnpm-lock.yaml exists
+RUN ls -la && echo "=== Checking for pnpm-lock.yaml ===" && test -f pnpm-lock.yaml && echo "✅ pnpm-lock.yaml found!" || echo "❌ pnpm-lock.yaml NOT found!"
+
 COPY apps/api/package.json ./apps/api/
 COPY packages/types/package.json ./packages/types/
 COPY packages/utils/package.json ./packages/utils/
