@@ -3,7 +3,7 @@
 
 # Base stage
 FROM node:20-alpine AS base
-RUN corepack enable && corepack prepare pnpm@9.15.0 --activate
+RUN corepack enable && corepack prepare pnpm@10.20.0 --activate
 WORKDIR /app
 
 # Dependencies stage
@@ -35,7 +35,7 @@ RUN pnpm build
 
 # Production stage
 FROM node:20-alpine AS production
-RUN corepack enable && corepack prepare pnpm@9.15.0 --activate
+RUN corepack enable && corepack prepare pnpm@10.20.0 --activate
 WORKDIR /app
 
 # Copy package files
