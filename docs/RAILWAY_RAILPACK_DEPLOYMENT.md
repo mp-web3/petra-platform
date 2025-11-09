@@ -62,7 +62,8 @@ Go to **Variables** tab and add:
 # Database
 DATABASE_URL=postgresql://postgres:[YOUR-PASSWORD]@db.[PROJECT-REF].supabase.co:5432/postgres?sslmode=require
 
-# JWT
+railway# JWT (REQUIRED for production)
+# Generate a strong random secret: openssl rand -base64 32
 JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
 
 # Stripe
@@ -245,16 +246,16 @@ If something goes wrong:
 
 ## Environment Variables Reference
 
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `DATABASE_URL` | Supabase PostgreSQL connection string | `postgresql://postgres:...` |
-| `JWT_SECRET` | Secret for JWT token signing | `your-secret-key` |
-| `STRIPE_SECRET_KEY` | Stripe API secret key | `sk_test_...` |
-| `STRIPE_WEBHOOK_SECRET` | Stripe webhook signing secret | `whsec_...` |
-| `RESEND_API_KEY` | Resend email API key | `re_...` |
-| `FRONTEND_URL` | Frontend application URL | `https://petra.vercel.app` |
-| `NODE_ENV` | Node environment | `production` |
-| `PORT` | Server port (auto-set by Railway) | `3000` |
+| Variable                | Description                                            | Example                                  |
+| ----------------------- | ------------------------------------------------------ | ---------------------------------------- |
+| `DATABASE_URL`          | Supabase PostgreSQL connection string                  | `postgresql://postgres:...`              |
+| `JWT_SECRET`            | Secret for JWT token signing (required for production) | Generate with: `openssl rand -base64 32` |
+| `STRIPE_SECRET_KEY`     | Stripe API secret key                                  | `sk_test_...`                            |
+| `STRIPE_WEBHOOK_SECRET` | Stripe webhook signing secret                          | `whsec_...`                              |
+| `RESEND_API_KEY`        | Resend email API key                                   | `re_...`                                 |
+| `FRONTEND_URL`          | Frontend application URL                               | `https://petra.vercel.app`               |
+| `NODE_ENV`              | Node environment                                       | `production`                             |
+| `PORT`                  | Server port (auto-set by Railway)                      | `3000`                                   |
 
 ---
 
