@@ -39,7 +39,7 @@ services:
   api:
     build:
       context: .
-      dockerfile: apps/api/Dockerfile
+      dockerfile: Dockerfile.api
       target: development
     container_name: petra-api
     restart: unless-stopped

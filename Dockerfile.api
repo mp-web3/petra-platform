@@ -1,3 +1,6 @@
+# Dockerfile for NestJS API
+# Build context: repository root
+
 # Base stage
 FROM node:20-alpine AS base
 RUN corepack enable && corepack prepare pnpm@9.15.0 --activate
@@ -11,14 +14,6 @@ COPY packages/types/package.json ./packages/types/
 COPY packages/utils/package.json ./packages/utils/
 COPY packages/config/package.json ./packages/config/
 RUN pnpm install --frozen-lockfile
-
-# Development stage
-FROM base AS development
-COPY --from=dependencies /app/node_modules ./node_modules
-COPY . .
-WORKDIR /app/apps/api
-EXPOSE 3001
-CMD ["pnpm", "dev"]
 
 # Build stage
 FROM base AS build

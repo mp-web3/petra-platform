@@ -1,8 +1,10 @@
+# Railway configuration for API service
+# For multiple services, configure each service separately in Railway UI
+
 [build]
 builder = "DOCKERFILE"
-dockerfilePath = "apps/api/Dockerfile"
+dockerfilePath = "Dockerfile.api"
 
 [deploy]
 healthcheckPath = "/health"
 restartPolicyType = "ON_FAILURE"
-
