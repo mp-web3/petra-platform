@@ -2,9 +2,12 @@
     "extends": "@petra/config/typescript/base.json",
     "compilerOptions": {
         "outDir": "./dist",
-        "rootDir": "./src",
         "declaration": true,
-        "declarationMap": true
+        "declarationMap": true,
+        "baseUrl": "../..",
+        "paths": {
+            "@petra/types": ["packages/types/src/index.ts"]
+        }
     },
     "include": [
         "src/**/*"
